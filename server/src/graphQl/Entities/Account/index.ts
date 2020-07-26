@@ -2,7 +2,7 @@ import { prop as Property, getModelForClass, Ref } from '@typegoose/typegoose';
 import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
-import { Employee } from '..';
+import { Employee, EmployeeModel } from '..';
 
 @ObjectType()
 export class Account {

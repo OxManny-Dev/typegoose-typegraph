@@ -1,5 +1,5 @@
 import { Field, InputType } from 'type-graphql';
-import { MaxLength, Length, IsEmail } from 'class-validator';
+import { MaxLength, Length, IsEmail, ValidatePromise } from 'class-validator';
 import { Employee as GqlEmployee } from '../../Entities/Employee';
 
 @InputType()
