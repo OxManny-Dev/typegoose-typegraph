@@ -105,6 +105,8 @@ export class EmployeeResolver {
     let account: GqlAccount;
     try {
       if (parent.account) {
+        console.log(parent);
+        // account = await parent.getEmployeeAccount();
         account = await AccountModel.findById(parent.account._id.toString()).populate('admin');
         return account;
       }

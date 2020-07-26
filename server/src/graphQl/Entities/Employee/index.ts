@@ -3,7 +3,7 @@ import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Account } from '../Account';
+import { Account, AccountModel } from '../Account';
 
 @ObjectType({ description: 'A User or Employee of the program' })
 @pre<Employee>('save', async function (next) {
@@ -41,10 +41,10 @@ export class Employee {
 
   @Property({
     trim: true,
-    get(val) {
+    get (val) {
       return val;
     },
-    set(val) {
+    set (val) {
       return val.charAt(0).toUpperCase() + val.slice(1);
     },
   })
@@ -53,10 +53,10 @@ export class Employee {
 
   @Property({
     trim: true,
-    get(val) {
+    get (val) {
       return val;
     },
-    set(val) {
+    set (val) {
       return val.charAt(0).toUpperCase() + val.slice(1);
     },
   })
@@ -72,7 +72,26 @@ export class Employee {
 
   @Property({ ref: Account, type: Schema.Types.ObjectId })
   @Field((_type: void) => Account!)
-  public account!: Ref<Account>
+  public account!: Ref<Account>;
+
+  public async comparePassword (candidatePassword: string): Promise<boolean> {
+    const employee = this;
+    try {
+      const isMatch: boolean = await bcrypt.compare(candidatePassword, employee.password);
+      return Promise.resolve(isMatch);
+    } catch (e) {
+      return Promise.reject(e);
+    }
+  }
+
+  // Might be useful later
+  // public async getEmployeeAccount () {
+  //   try {
+  //     return await AccountModel.findById(this.account).populate({ path: 'admin', populate: { path: 'account' } });
+  //   } catch (e) {
+  //     throw new Error(e);
+  //   }
+  // }
 }
 
 export const EmployeeModel = getModelForClass(Employee);
