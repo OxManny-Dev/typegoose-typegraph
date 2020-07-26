@@ -1,9 +1,14 @@
-import { prop as Property, getModelForClass, Ref, pre } from '@typegoose/typegoose';
-import { ObjectType, Field } from 'type-graphql';
+import {
+  getModelForClass,
+  pre,
+  prop as Property,
+  Ref,
+} from '@typegoose/typegoose';
+import { Field, ObjectType } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Account, AccountModel } from '../Account';
+import { Account } from '../Account';
 
 @ObjectType({ description: 'A User or Employee of the program' })
 @pre<Employee>('save', async function (next) {
@@ -41,10 +46,10 @@ export class Employee {
 
   @Property({
     trim: true,
-    get (val) {
+    get(val) {
       return val;
     },
-    set (val) {
+    set(val) {
       return val.charAt(0).toUpperCase() + val.slice(1);
     },
   })
@@ -53,10 +58,10 @@ export class Employee {
 
   @Property({
     trim: true,
-    get (val) {
+    get(val) {
       return val;
     },
-    set (val) {
+    set(val) {
       return val.charAt(0).toUpperCase() + val.slice(1);
     },
   })
@@ -74,7 +79,7 @@ export class Employee {
   @Field((_type: void) => Account!)
   public account!: Ref<Account>;
 
-  public async comparePassword (candidatePassword: string): Promise<boolean> {
+  public async comparePassword(candidatePassword: string): Promise<boolean> {
     const employee = this;
     try {
       const isMatch: boolean = await bcrypt.compare(candidatePassword, employee.password);
