@@ -1,36 +1,40 @@
-import 'reflect-metadata';
-import { ObjectId } from 'mongodb';
-
 import {
-  Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, InputType, Field,
+  Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root,
 } from 'type-graphql';
 
-import { MaxLength, Length } from 'class-validator';
 import faker from 'faker';
 import { Context } from '../../../lib/types';
-import { Employee as GqlEmployee } from '../../Entities/Employee';
-import employee from '../../typeDefs/types/employee';
+import { Account as GqlAccount, Employee as GqlEmployee } from '../../Entities';
 
-@InputType()
-export class SignUpInput implements Partial<GqlEmployee> {
-  @Field((type) => String)
-  public email?: string;
+import { SignUpInput } from '../../inputTypes/employeeInput';
 
-  @Field((type) => String)
-  public password?: string;
-}
-
-@Resolver((of) => GqlEmployee)
+@Resolver((_of) => GqlEmployee)
 export class EmployeeResolver {
-  @Query((returns) => GqlEmployee)
-  // eslint-disable-next-line class-methods-use-this
-  async employees (@Ctx('Employee Collection') { EmployeeModel, AccountModel }: Context) {
+  @Query((_returns) => [GqlEmployee])
+  async employees(
+    @Ctx() { EmployeeModel }: Context,
+  ): Promise<GqlEmployee[] | null> {
     // fake async in this example
-    return EmployeeModel.findOne({ name: 'Manny' });
+    console.log(EmployeeModel);
+    try {
+      const employees = await EmployeeModel.find()
+        .populate({
+          path: 'account',
+          populate: { path: 'admin' },
+        })
+        .exec();
+
+      if (employees) {
+        return employees;
+      }
+      return null;
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
-  @Mutation((returns) => GqlEmployee)
-  async signUpForAccount (
+  @Mutation((_returns) => GqlEmployee)
+  async signUpForAccount(
     // You must use a single string for Arg
     @Arg('signUpInput') signUpInput: SignUpInput,
     @Ctx() { EmployeeModel, AccountModel }: Context,
@@ -38,10 +42,9 @@ export class EmployeeResolver {
     let newEmployee;
     try {
       newEmployee = await new EmployeeModel({ ...signUpInput, firstName: 'Manny' }).save();
-      newEmployee.account = await new AccountModel({ admin: newEmployee._id, name: faker.random.word() }).save();
+      newEmployee.account = await new AccountModel({ admin: newEmployee.id, name: faker.random.word() }).save();
       await newEmployee.save();
     } catch (e) {
-      console.log(e);
       throw new Error(e);
     }
 
@@ -53,14 +56,21 @@ export class EmployeeResolver {
   }
 
   @FieldResolver()
-  id (@Root() currentEmployee: GqlEmployee) {
+  id(@Root() currentEmployee: GqlEmployee) {
     return currentEmployee._id.toString();
   }
 
   @FieldResolver()
-  async account (@Root() currentEmployee: GqlEmployee, @Ctx() { AccountModel }: Context) {
+  async account(
+    @Root() parent,
+    @Ctx() { AccountModel }: Context,
+  ): Promise<GqlAccount | null> {
+    let account: GqlAccount;
     try {
-      return await AccountModel.findById(currentEmployee.account).populate('admin');
+      if (parent.account) {
+        account = await AccountModel.findById(parent.account._id.toString()).populate('admin');
+        return account;
+      }
     } catch (e) {
       throw new Error(e);
     }
