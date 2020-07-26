@@ -13,7 +13,7 @@ export class Account {
 
   @Property({ ref: 'Employee', required: true })
   @Field(() => Employee)
-  admin!: Ref<Employee>;
+  admin!: Ref<Employee>
 }
 
 export const AccountModel = getModelForClass(Account);
