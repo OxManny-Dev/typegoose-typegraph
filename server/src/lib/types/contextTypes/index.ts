@@ -11,6 +11,7 @@ import {
   IEmployeeDocument,
 } from '..';
 import { Employee } from '../../../graphQl/Entities/Employee';
+import { Account } from '../../../graphQl/Entities/Account';
 
 /*
 * These are meant to be used for the context Object
@@ -29,20 +30,21 @@ export interface BuildAuthContext {
 * to get auto completion in your resolver
 */
 
-export interface Models {
-  db: {
-    Account: Model<IAccountDocument>;
-    Crew: Model<ICrewDocument>;
-    Field: Model<IFieldDocument>;
-    Job: Model<IJobDocument>;
-    JobLog: Model<IJobLogDocument>,
-    Ranch: Model<IRanchDocument>;
-    Employee: Model<IEmployeeDocument>,
-  }
-}
+// export interface Models {
+//   db: {
+//     Account: Model<IAccountDocument>;
+//     Crew: Model<ICrewDocument>;
+//     Field: Model<IFieldDocument>;
+//     Job: Model<IJobDocument>;
+//     JobLog: Model<IJobLogDocument>,
+//     Ranch: Model<IRanchDocument>;
+//     Employee: Model<IEmployeeDocument>,
+//   }
+// }
 
-export interface NewModels extends Models {
+export interface NewModels {
   EmployeeModel: ReturnModelType<typeof Employee> & Employee;
+  AccountModel: ReturnModelType<typeof Account> & Account;
 }
 
 /*

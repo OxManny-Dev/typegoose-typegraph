@@ -4,11 +4,10 @@ import { ApolloServer } from 'apollo-server-express';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 import { buildSchema } from 'type-graphql';
-import { ReturnModelType } from '@typegoose/typegoose';
 import { TypegooseMiddleware } from '../middlewares/typegoose-middleware';
 import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
 
-import { EmployeeModel } from './Entities/Employee';
+import { EmployeeModel, AccountModel } from './Entities';
 import { EmployeeResolver } from './newResolvers/employee';
 // import { buildAuthContext } from './context';
 /*
@@ -25,6 +24,8 @@ export const createApolloServer = async function () {
     resolvers: [EmployeeResolver],
     // use document converting middleware
     globalMiddlewares: [TypegooseMiddleware],
+    emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
+
     // use ObjectId scalar mapping
     scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
     validate: false,
@@ -32,15 +33,7 @@ export const createApolloServer = async function () {
   return new ApolloServer({
     schema,
     context: ({ req, res }) => ({
-      // ...buildAuthContext(req),
-      // db: {
-      //   Account,
-      //   Field,
-      //   Job,
-      //   Ranch,
-      //   Employee,
-      //   JobLog,
-      // },
+      AccountModel,
       EmployeeModel,
       req,
       res,

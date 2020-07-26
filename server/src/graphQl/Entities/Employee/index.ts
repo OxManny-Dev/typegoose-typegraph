@@ -1,7 +1,7 @@
-import 'reflect-metadata';
-import { prop as Property, getModelForClass } from '@typegoose/typegoose';
+import { prop as Property, getModelForClass, Ref } from '@typegoose/typegoose';
 import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
+import { Account } from '../Account';
 
 @ObjectType()
 export class Employee {
@@ -25,6 +25,10 @@ export class Employee {
 
   @Property()
   public password!: string;
+
+  @Property({ ref: Account, type: Account })
+  @Field((type) => Account!)
+  account!: Ref<Account>;
 }
 
 export const EmployeeModel = getModelForClass(Employee);

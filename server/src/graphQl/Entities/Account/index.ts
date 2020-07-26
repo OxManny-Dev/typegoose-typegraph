@@ -1,17 +1,19 @@
-import 'reflect-metadata';
-import { prop as Property, getModelForClass } from '@typegoose/typegoose';
+import { prop as Property, getModelForClass, Ref } from '@typegoose/typegoose';
 import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
-import { Employee } from '../Employee';
+import { Employee } from '..';
+
 @ObjectType()
 export class Account {
-  readonly _id!: ObjectId;
+  // readonly _id!: ObjectId;
 
   @Field()
-  id!: string;
+  _id!: string;
 
-  @Property({ ref: Employee, required: true })
-  @Field({ nullable: true })
-  admin!: Employee;
+  @Property({ ref: 'Employee', required: true })
+  @Field(() => Employee)
+  admin!: Ref<Employee>;
 }
+
+export const AccountModel = getModelForClass(Account);
