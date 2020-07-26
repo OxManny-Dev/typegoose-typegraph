@@ -3,7 +3,7 @@ import {
   Field,
   FormSubmitHandler,
   reduxForm,
-  WrappedFieldProps
+  WrappedFieldProps,
 } from 'redux-form';
 import {
   Button,
@@ -14,12 +14,11 @@ import {
 
 
 import { useMutation } from '@apollo/react-hooks';
-import { SignInInput } from '../../lib/graphql/globalTypes';
 import { useSelector } from 'react-redux';
 import SendIcon from '@material-ui/icons/Send';
 
 import { SIGN_UP } from './../../lib/graphql/mutations';
-import { SignUp as SignUpData, SignUpVariables } from '../../lib/graphql/mutations/SignUp/__generated__/SignUp';
+import { signUpForAccount as signUpForAccountData, signUpForAccountVariables } from '../../lib/graphql/mutations/SignUp/__generated__/signUpForAccount';
 import { SignUpInput } from '../../lib/graphql/globalTypes';
 import { IAppState } from '../../reducers';
 import { Redirect } from 'react-router-dom';
@@ -42,7 +41,7 @@ const PasswordInput = (field: WrappedFieldProps) => {
 
 
 /* To put AutoCompletion on props for redux form, You need to pass it this type */
-export const SignUp = reduxForm<SignInInput>({ form: "login" })((props) => {
+export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
   const employee = useSelector<IAppState, IEmployeeState>(state => state.employee);
   const [
     signInUser,
@@ -51,7 +50,7 @@ export const SignUp = reduxForm<SignInInput>({ form: "login" })((props) => {
       loading: signUpLoading,
       error: signUpError
     }
-  ] = useMutation<SignUpData, SignUpVariables>(SIGN_UP);
+  ] = useMutation<signUpForAccountData, signUpForAccountVariables>(SIGN_UP);
   const { handleSubmit} = props;
 
   /*
@@ -60,8 +59,10 @@ export const SignUp = reduxForm<SignInInput>({ form: "login" })((props) => {
   const onSubmit: FormSubmitHandler<SignUpInput> = async (formValues, dispatch) => {
     try {
       const { data } = await signInUser({ variables: { input: formValues } });
-      sessionStorage.setItem('employee', JSON.stringify(data?.SignUp));
-      dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.SignUp });
+      console.log(data);
+      sessionStorage.setItem('employee', JSON.stringify(data?.signUpForAccount));
+
+      dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.signUpForAccount });
     } catch (e) {
       console.log(e);
     }

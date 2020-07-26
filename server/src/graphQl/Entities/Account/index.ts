@@ -3,6 +3,7 @@ import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
 import { Employee, EmployeeModel } from '..';
+import { Schema } from 'mongoose';
 
 @ObjectType()
 export class Account {
@@ -11,7 +12,7 @@ export class Account {
   @Field()
   _id!: string;
 
-  @Property({ ref: 'Employee', required: true })
+  @Property({ ref: 'Employee', required: true, type: Schema.Types.ObjectId })
   @Field(() => Employee)
   admin!: Ref<Employee>
 }

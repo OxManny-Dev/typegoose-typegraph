@@ -9,7 +9,13 @@ import { Context } from '../../../lib/types';
 import { Account as GqlAccount, Employee as GqlEmployee } from '../../Entities';
 
 import { SignUpInput } from '../../inputTypes/employeeInput';
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
+
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: true,
+  signed: true,
+  secure: process.env.NODE_ENV === 'development',
+};
 
 @Resolver((_of: void) => GqlEmployee)
 export class EmployeeResolver {
@@ -40,12 +46,12 @@ export class EmployeeResolver {
   async signUpForAccount(
     // You must use a single string for Arg
     @Arg('signUpInput') signUpInput: SignUpInput,
-    @Ctx() { EmployeeModel, AccountModel }: Context,
+    @Ctx() { EmployeeModel, AccountModel, res }: Context,
   ): Promise<GqlEmployee | null> {
-    const token = crypto.randomBytes(16).toString('hex');
     // Place holder variable for new employee
     let newEmployee;
     let errors: ValidationError[];
+    const token = crypto.randomBytes(16).toString('hex');
     // Validate Inputs
     try {
       errors = await validate(signUpInput, { validationError: { target: false } });
@@ -75,6 +81,10 @@ export class EmployeeResolver {
     }
 
     if (newEmployee) {
+      res.cookie('employee', newEmployee.id, {
+        ...cookieOptions,
+        maxAge: 1000 * 60 * 60 * 24,
+      });
       console.log(newEmployee);
       return newEmployee;
     }
