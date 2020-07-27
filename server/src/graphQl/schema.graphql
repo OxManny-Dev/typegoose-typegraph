@@ -32,11 +32,11 @@ type Query {
 }
 
 input SignInInput {
-  email: String!
-  password: String!
+  email: String
+  password: String
 }
 
 input SignUpInput {
-  email: String!
-  password: String!
+  email: String
+  password: String
 }

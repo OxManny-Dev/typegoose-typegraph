@@ -21,77 +21,77 @@ export enum EmployeeRoleType {
   WORKER = 'WORKER',
 }
 
-// export interface IEmployeeDocument extends Document {
+export interface IEmployeeDocument extends Document {
+  _id: Types.ObjectId;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  isAdmin?: boolean;
+  role: EmployeeRoleType;
+  token: string;
+  account: IAccountDocument;
+  crews: ICrewDocument;
+  fields: IFieldDocument[];
+  jobs: IJobDocument[];
+  jobLogs: IJobLogDocument[];
+  ranches: IRanchDocument[];
+  comparePassword: (password: string) => Promise<boolean>;
+  getEmployeeAccount: () => Promise<IAccountDocument | null>;
+}
+
+export interface IEmployeeModel extends Model<IEmployeeDocument> {
+  getEmployeeAccount: (id: string) => IAccountDocument;
+}
+// export interface IUserDocument extends Document {
 //   _id: Types.ObjectId;
 //   email: string;
-//   firstName: string;
-//   lastName: string;
 //   password: string;
-//   isAdmin?: boolean;
-//   role: RoleType;
+//   role: string;
+//   admin?: boolean;
 //   token: string;
-//   account: IAccountDocument;
-//   crews: ICrewDocument;
-//   fields: IFieldDocument[];
-//   jobs: IJobDocument[];
-//   jobLogs: IJobLogDocument[];
-//   ranches: IRanchDocument[];
 //   comparePassword: (password: string) => Promise<boolean>;
-//   getEmployeeAccount: () => Promise<IAccountDocument | null>;
+//   account: IAccountDocument;
 // }
 
-// export interface IEmployeeModel extends Model<IEmployeeDocument> {
-//   getEmployeeAccount: (id: string) => IAccountDocument;
-// }
-// // export interface IUserDocument extends Document {
-// //   _id: Types.ObjectId;
-// //   email: string;
-// //   password: string;
-// //   role: string;
-// //   admin?: boolean;
-// //   token: string;
-// //   comparePassword: (password: string) => Promise<boolean>;
-// //   account: IAccountDocument;
-// // }
-//
-// // These are Graph Return Values
-// export interface GqlEmployee {
-//   id?: Types.ObjectId;
-//   email?: string;
-//   firstName?: string;
-//   lastName?: string;
-//   isAdmin?: boolean;
-//   role?: string;
-//   token?: string;
-//   account?: IAccountDocument;
-//   crews?: ICrewDocument;
-//   fields?: IFieldDocument[];
-//   ranches?: IRanchDocument[];
-//   jobs?: IJobDocument[];
-//   jobLogs?: IJobLogDocument[];
-// }
-//
-// export type SignInInput = {
-//   email: string;
-//   password: string;
-// }
-//
-// export type CreateEmployeeInput = {
-//   input: {
-//     firstName?: string;
-//     lastName?: string;
-//     email: string;
-//     password: string;
-//     role: string;
-//   }
-// }
-//
-// export type SignInArgs = {
-//   input: SignInInput;
-// }
-//
-// export type SignUpInput = SignInInput;
-//
-// export type SignUpArgs = {
-//   input: SignUpInput;
-// }
+// These are Graph Return Values
+export interface GqlEmployee {
+  id?: Types.ObjectId;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  isAdmin?: boolean;
+  role?: string;
+  token?: string;
+  account?: IAccountDocument;
+  crews?: ICrewDocument;
+  fields?: IFieldDocument[];
+  ranches?: IRanchDocument[];
+  jobs?: IJobDocument[];
+  jobLogs?: IJobLogDocument[];
+}
+
+export type SignInInput = {
+  email: string;
+  password: string;
+}
+
+export type CreateEmployeeInput = {
+  input: {
+    firstName?: string;
+    lastName?: string;
+    email: string;
+    password: string;
+    role: string;
+  }
+}
+
+export type SignInArgs = {
+  input: SignInInput;
+}
+
+export type SignUpInput = SignInInput;
+
+export type SignUpArgs = {
+  input: SignUpInput;
+}

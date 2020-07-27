@@ -1,20 +1,13 @@
 import {
-  getModelForClass, pre, prop as Property, QueryMethod, Ref, ReturnModelType,
+  getModelForClass, pre, prop as Property, Ref, ReturnModelType,
 } from '@typegoose/typegoose';
 import { Field, ObjectType } from 'type-graphql';
 import { ObjectId } from 'mongodb';
-import { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { Account, AccountModel } from '../Account';
+// import { Schema } from 'mongoose';
 
-export enum RoleType {
-  Admin = 'Admin',
-  Manager = 'Manager',
-  InputUser = 'InputUser',
-  FieldUser = 'FieldUser',
-  SetupUser = 'SetupUser',
-  Worker = 'Worker',
-}
+import { EmployeeRoleType } from '../../../lib/types/modelTypes';
 
 @ObjectType({ description: 'A User or Employee of the program' })
 @pre<Employee>('save', async function (next) {
@@ -74,7 +67,7 @@ export class Employee {
   @Field({ nullable: true })
   lastName?: string;
 
-  @Property({ enum: RoleType })
+  @Property({ enum: EmployeeRoleType })
   @Field({ nullable: true })
   role?: string;
 
@@ -85,7 +78,7 @@ export class Employee {
   @Field({ nullable: true })
   token?: string;
 
-  @Property({ ref: Account, type: Schema.Types.ObjectId })
+  @Property({ ref: Account, type: ObjectId })
   @Field((_type: void) => Account, { nullable: true })
   account?: Ref<Account>;
 
