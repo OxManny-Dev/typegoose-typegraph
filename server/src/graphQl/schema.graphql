@@ -20,7 +20,7 @@ type Employee {
 }
 
 type Mutation {
-  signIn(signInInput: SignInInput!): Employee!
+  signIn(signInInput: SignInInput): Employee!
   signOut: Employee!
   signUp(signUpInput: SignUpInput!): Employee!
 }

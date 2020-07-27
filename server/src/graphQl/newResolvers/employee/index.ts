@@ -9,15 +9,11 @@ import { Context } from '../../../lib/types';
 import { Account as GqlAccount, Employee as GqlEmployee } from '../../Entities';
 
 import { AuthenticateEmployee } from '../../gqlMiddleware/authenticate';
+import { LogInWithCookie } from '../../gqlMiddleware/loginWithCookie';
 
 import { SignUpInput, SignInInput } from '../../inputTypes/employeeInput';
 
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: true,
-  signed: true,
-  secure: process.env.NODE_ENV === 'development',
-};
+import { cookieOptions } from '../../../lib/utils/cookieOptions';
 
 @Resolver((_of: void) => GqlEmployee)
 export class EmployeeResolver {
@@ -104,13 +100,41 @@ export class EmployeeResolver {
   // async signIn(@Args())
 
   @Mutation((_returns) => GqlEmployee)
+  @UseMiddleware(LogInWithCookie)
   async signIn(
-    @Arg('signInInput') signInInput: SignInInput,
+    @Arg('signInInput', { nullable: true, validate: false }) signInInput: SignInInput,
     @Ctx() {
-        req, res, EmployeeModel, AccountModel,
+        res, EmployeeModel,
       } : Context,
   ) {
     const token = crypto.randomBytes(16).toString('hex');
+    let employee;
+    // Look for Employee if email exist
+    try {
+      employee = await EmployeeModel.findOne({ email: signInInput.email });
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+    const isMatch = await employee.comparePassword(signInInput.password);
+    if (!isMatch) {
+      throw new Error('Invalid credentials');
+    }
+
+    if (employee) {
+      res.cookie('loggedInEmployee', employee._id, {
+        ...cookieOptions,
+        maxAge: 1000 * 60 * 60 * 24,
+      });
+
+      console.log(employee);
+      employee.token = token;
+      await employee.save();
+      return employee;
+    }
   }
 
   @Mutation((_returns: void) => GqlEmployee)

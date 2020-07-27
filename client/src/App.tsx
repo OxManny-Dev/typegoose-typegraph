@@ -14,7 +14,7 @@ import { EmployeesComponent } from './sections/Employees';
 import { AppBarNav } from './components/AppBar';
 import { DrawBar } from './components/DrawBar';
 
-import { SignIn as SignInData } from './lib/graphql/mutations/Login/__generated__/SignIn';
+import { signIn as signInData } from './lib/graphql/mutations/Login/__generated__/signIn';
 import { SIGN_IN } from './lib/graphql/mutations/Login';
 import { IAppState } from './reducers';
 import { IEmployeeState } from './reducers/employeeReducer';
@@ -46,13 +46,12 @@ export const App = () => {
   const employee = useSelector<IAppState, IEmployeeState>(state => state.employee);
 
 
-  const [signInUser] = useMutation<SignInData>(SIGN_IN, {
+  const [signInUser] = useMutation<signInData>(SIGN_IN, {
     onCompleted: data => {
-      if (data && data.SignIn.token) {
-        if (data.SignIn.token) {
-          sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.SignIn));
-          console.log(data.SignIn, 'data');
-          dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.SignIn });
+      if (data && data.signIn.token) {
+        if (data.signIn.token) {
+          sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.signIn));
+          dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.signIn });
           history.push('/employees');
         } else {
           sessionStorage.removeItem('employee');
@@ -63,16 +62,16 @@ export const App = () => {
     },
     onError: error => {
       history.push('/');
+      sessionStorage.removeItem('employee');
     }
   });
 
   const signInUserRef = useRef(signInUser);
-  /*
-  * The code below triggers so many re renders. It's not even worth it
-  **/
   useEffect(() => {
     if (!employee.loggedInEmployee?.token) {
-      signInUserRef.current();
+      // Have to pass these in or else we get a gql error
+      //
+      signInUserRef.current({variables: { input: { email: '', password: ''} }});
     }
   }, [employee]);
 

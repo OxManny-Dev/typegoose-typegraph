@@ -7,8 +7,6 @@
 // START Enums and Input Objects
 //==============================================================
 
-
-
 export interface AddRanchInput {
   name: string;
 }
@@ -29,12 +27,12 @@ export interface CreateJobInput {
   name: string;
 }
 
-export interface SignInInput {
+export interface SignUpInput {
   email: string;
   password: string;
 }
 
-export interface SignUpInput {
+export interface SignInInput {
   email: string;
   password: string;
 }

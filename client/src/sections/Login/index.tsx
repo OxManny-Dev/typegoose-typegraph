@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { Button, TextField } from "@material-ui/core";
 import { loginStyle } from "./loginStyle"
 import { SignInInput } from "../../lib/graphql/globalTypes";
-import { SignIn as SignInData, SignInVariables } from "../../lib/graphql/mutations/Login/__generated__/SignIn";
+import { signIn as signInData, signInVariables } from "../../lib/graphql/mutations/Login/__generated__/signIn";
 import { useSelector } from 'react-redux'
 import SendIcon from '@material-ui/icons/Send';
 
@@ -36,7 +36,7 @@ export const Login = reduxForm<SignInInput>({form: "login"})((props) => {
       loading: signInLoading,
       error: signInError
     }
-  ] = useMutation<SignInData, SignInVariables>(SIGN_IN);
+  ] = useMutation<signInData, signInVariables>(SIGN_IN);
 
 
   const { handleSubmit} = props;
@@ -48,8 +48,8 @@ export const Login = reduxForm<SignInInput>({form: "login"})((props) => {
     try {
       const { data} = await signInEmployee({variables: { input: formValues }});
       if (data) {
-        sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.SignIn));
-        dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.SignIn });
+        sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.signIn));
+        dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.signIn });
       }
     } catch (e) {
       console.log(e);
