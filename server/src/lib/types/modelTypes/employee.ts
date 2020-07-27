@@ -14,11 +14,12 @@ import { ICrewDocument } from './crew';
 */
 
 export enum EmployeeRoleType {
-  MANAGER = 'MANAGER',
-  INPUT_USER = 'INPUT_USER',
-  FIELD_USER = 'FIELD_USER',
-  SETUP_USER = 'SETUP_USER',
-  WORKER = 'WORKER',
+  Admin = 'Admin',
+  Manager = 'Manager',
+  InputUser = 'InputUser',
+  FieldUser = 'FieldUser',
+  SetupUser = 'SetupUser',
+  Worker = 'Worker',
 }
 
 export interface IEmployeeDocument extends Document {

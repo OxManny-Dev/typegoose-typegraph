@@ -49,14 +49,11 @@ export const App = () => {
   const [signInUser] = useMutation<signInData>(SIGN_IN, {
     onCompleted: data => {
       if (data && data.signIn.token) {
-        if (data.signIn.token) {
-          sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.signIn));
-          dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.signIn });
-          history.push('/employees');
-        } else {
-          sessionStorage.removeItem('employee');
-        }
+        sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.signIn));
+        dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data.signIn });
+        history.push('/employees');
       } else {
+        sessionStorage.removeItem('employee');
         history.push('/');
       }
     },
@@ -68,9 +65,8 @@ export const App = () => {
 
   const signInUserRef = useRef(signInUser);
   useEffect(() => {
+    console.log(employee.loggedInEmployee?.token);
     if (!employee.loggedInEmployee?.token) {
-      // Have to pass these in or else we get a gql error
-      //
       signInUserRef.current({variables: { input: { email: '', password: ''} }});
     }
   }, [employee]);

@@ -19,7 +19,7 @@ import 'react-tabulator/css/materialize/tabulator_materialize.min.css'; // use T
 
 /* lines 21 - 30 are for preloading state*/
 const getToken = () => {
-  const employee = sessionStorage.getItem('employee');
+  const employee = sessionStorage.getItem('loggedInEmployee');
   if (employee) {
     return JSON.parse(employee);
   }
