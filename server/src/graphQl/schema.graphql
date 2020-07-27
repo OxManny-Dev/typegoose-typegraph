@@ -19,6 +19,10 @@ input CreateEmployeeInput {
   role: String
 }
 
+input CreateJobInput {
+  jobName: String!
+}
+
 """A User or Employee of the program"""
 type Employee {
   account: Account
@@ -44,6 +48,7 @@ type Job {
 
 type Mutation {
   createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
+  createJob(createJobInput: CreateJobInput!): Job!
   signIn(signInInput: SignInInput): Employee!
   signOut: Employee!
   signUp(signUpInput: SignUpInput!): Employee!
@@ -51,6 +56,7 @@ type Mutation {
 
 type Query {
   fetchEmployees: [Employee!]!
+  fetchJobs: [Job!]!
 }
 
 input SignInInput {

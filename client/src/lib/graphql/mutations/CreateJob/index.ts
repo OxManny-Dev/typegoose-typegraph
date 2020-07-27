@@ -1,10 +1,10 @@
 import { gql } from 'apollo-boost';
 
 export const CREATE_JOB = gql`
-  mutation CreateJob($input: CreateJobInput!) {
-    CreateJob(input: $input) {
+  mutation createJob($input: CreateJobInput!) {
+    createJob(createJobInput: $input) {
       id
-      name
+      jobName
     }
   }
 `;

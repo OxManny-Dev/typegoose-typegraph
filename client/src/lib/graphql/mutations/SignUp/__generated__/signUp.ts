@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SignUpInput } from "../../../globalTypes";
+import { SignUpInput } from "./../../../globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: signUp
@@ -11,7 +11,7 @@ import { SignUpInput } from "../../../globalTypes";
 
 export interface signUp_signUp {
   __typename: "Employee";
-  id: string;
+  id: string | null;
   email: string | null;
   token: string | null;
 }

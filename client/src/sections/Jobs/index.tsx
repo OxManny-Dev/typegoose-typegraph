@@ -12,14 +12,14 @@ import { ReactTabulator } from 'react-tabulator';
 
 // Query
 import { FETCH_JOBS } from '../../lib/graphql/queries/Job';
-import { jobs } from '../../lib/graphql/queries/Job/__generated__/jobs';
+import { fetchJobs } from '../../lib/graphql/queries/Job/__generated__/fetchJobs';
 
 // Mutation
 import { CREATE_JOB } from '../../lib/graphql/mutations/CreateJob';
 import {
-  CreateJob as CreateJobData,
-  CreateJobVariables
-} from '../../lib/graphql/mutations/CreateJob/__generated__/CreateJob';
+  createJob as CreateJobData,
+  createJobVariables as CreateJobVariables
+} from '../../lib/graphql/mutations/CreateJob/__generated__/createJob';
 import { CreateJobInput } from '../../lib/graphql/globalTypes';
 
 // Redux
@@ -38,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type Props = {
-  name: string
-}
 
 const columns = [
   { title: 'Job Name', field: 'name', width: 150 },
@@ -55,7 +52,7 @@ const JobNameInput = (field: WrappedFieldProps) => {
     fullWidth/>;
 };
 
-export const JobsComponent = reduxForm<Props>({ form: 'create-job' })(React.memo((props) => {
+export const JobsComponent = reduxForm<CreateJobInput>({ form: 'create-job' })(React.memo((props) => {
   // Hooks
   const classes = useStyles();
   const jobState = useSelector<IAppState, IJobState>(state => state.job);
@@ -66,10 +63,10 @@ export const JobsComponent = reduxForm<Props>({ form: 'create-job' })(React.memo
     error: fetchJobsError,
     loading: fetchJobsLoading,
     refetch: refetchJobs,
-  } = useQuery<jobs>(FETCH_JOBS, {
+  } = useQuery<fetchJobs>(FETCH_JOBS, {
     onCompleted: data => {
       console.log('refetching jobs');
-      dispatch({ type: JobsActionTypes.FETCH_JOBS, payload: data.jobs });
+      dispatch({ type: JobsActionTypes.FETCH_JOBS, payload: data.fetchJobs });
     },
     fetchPolicy: 'cache-and-network',
   });
@@ -90,7 +87,8 @@ export const JobsComponent = reduxForm<Props>({ form: 'create-job' })(React.memo
   const renderJobs = () => {
     if (jobState.jobs.length) {
       return jobState.jobs.map(job => {
-        return <li key={job.id}>{job.name}</li>;
+        console.log(job);
+        return <li key={job.id}>{job.jobName}</li>;
       });
     }
     return <h1>No Jobs yet</h1>;
@@ -116,7 +114,7 @@ export const JobsComponent = reduxForm<Props>({ form: 'create-job' })(React.memo
       <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
         <h1>Jobs Component</h1>
         <Field
-          name='name'
+          name='jobName'
           component={JobNameInput}/>
         <Button
           variant='contained'

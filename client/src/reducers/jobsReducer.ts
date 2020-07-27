@@ -2,7 +2,7 @@ import { JobsActionTypes } from '../actions/types';
 
 export interface IJob {
   id?: string
-  name?: string;
+  jobName?: string;
   account?: {
     id: string;
     name: string;
@@ -19,7 +19,7 @@ export interface IJobActions {
 }
 
 const INITIAL_STATE = {
-  jobs: [{ id: '1', name: 'First Job'}],
+  jobs: [{ id: '1', jobName: 'First Job'}],
 };
 
 export const jobsReducer = (state: IJobState = INITIAL_STATE, action: IJobActions) => {

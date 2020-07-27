@@ -7,6 +7,11 @@
 // GraphQL mutation operation: signOut
 // ====================================================
 
+export interface signOut_signOut {
+  __typename: "Employee";
+  logOut: boolean | null;
+}
+
 export interface signOut {
-  signOut: boolean;
+  signOut: signOut_signOut;
 }

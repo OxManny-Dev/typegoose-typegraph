@@ -38,6 +38,19 @@ export class Account {
       throw new Error(e);
     }
   }
+
+  public async getJobs(this: DocumentType<Account>) {
+    try {
+      return this.populate({
+        path: 'jobs',
+        populate: {
+          path: 'employees',
+        },
+      }).execPopulate();
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
 }
 
 export const AccountModel = getModelForClass(Account);

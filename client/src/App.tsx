@@ -6,8 +6,8 @@ import { useMutation } from '@apollo/react-hooks';
 import { Container } from '@material-ui/core';
 import { Login } from './sections/Login';
 import { SignUp } from './sections/SignUp';
-import { AddRanch } from './sections/AddRanch';
-import { RanchesComponent } from './sections/Ranch';
+// import { AddRanch } from './sections/AddRanch';
+// import { RanchesComponent } from './sections/Ranch';
 import { JobsComponent } from './sections/Jobs';
 import { EmployeesComponent } from './sections/Employees';
 
@@ -97,8 +97,8 @@ export const App = () => {
           <Route exact path='/addjob' component={AddJobComponent}/>
           <Route exact path='/employees' component={EmployeesComponent}/>
           <Route exact path='/login' component={Login}/>
-          <Route exact path='/ranches' component={RanchesComponent}/>
-          <Route exact path='/addranch' component={AddRanch}/>
+          {/*<Route exact path='/ranches' component={RanchesComponent}/>*/}
+          {/*<Route exact path='/addranch' component={AddRanch}/>*/}
           <Route exact path='/' component={SignUp}/>
         </Container>
       </main>

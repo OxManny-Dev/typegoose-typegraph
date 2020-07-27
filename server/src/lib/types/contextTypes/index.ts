@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 
-import { Employee } from '../../../graphQl/Entities/Employee';
-import { Account } from '../../../graphQl/Entities/Account';
+import { Employee, Account, Job } from '../../../graphQl/Entities';
 
 /*
 * These are meant to be used for the context Object
@@ -13,6 +12,7 @@ import { Account } from '../../../graphQl/Entities/Account';
 export interface NewModels {
   EmployeeModel: ReturnModelType<typeof Employee> & Employee;
   AccountModel: ReturnModelType<typeof Account> & Account;
+  JobModel: ReturnModelType<typeof Job> & Job;
 }
 
 /*

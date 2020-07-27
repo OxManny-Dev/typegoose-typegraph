@@ -7,8 +7,8 @@ import { buildSchema } from 'type-graphql';
 import { TypegooseMiddleware } from '../middlewares/typegoose-middleware';
 import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
 
-import { EmployeeModel, AccountModel } from './Entities';
-import { EmployeeResolver } from './newResolvers/employee';
+import { EmployeeModel, AccountModel, JobModel } from './Entities';
+import { EmployeeResolver, JobResolver } from './resolvers';
 // import { buildAuthContext } from './context';
 /*
 * How to pimp out our request object with a ton of middlewares
@@ -21,7 +21,7 @@ import { EmployeeResolver } from './newResolvers/employee';
 
 export const createApolloServer = async function () {
   const schema = await buildSchema({
-    resolvers: [EmployeeResolver],
+    resolvers: [EmployeeResolver, JobResolver],
     // use document converting middleware
     globalMiddlewares: [TypegooseMiddleware],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
@@ -34,6 +34,7 @@ export const createApolloServer = async function () {
     context: ({ req, res }) => ({
       AccountModel,
       EmployeeModel,
+      JobModel,
       req,
       res,
     }),

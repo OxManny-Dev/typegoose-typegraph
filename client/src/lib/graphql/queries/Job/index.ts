@@ -2,13 +2,14 @@ import { gql } from 'apollo-boost';
 
 
 export const FETCH_JOBS = gql`
-  query jobs {
-    jobs {
+  query fetchJobs {
+    fetchJobs {
       id
-      name
-      account {
-        id
-        name
+      jobName
+      employees {
+        firstName
+        lastName
+        email
       }
     }
   }
