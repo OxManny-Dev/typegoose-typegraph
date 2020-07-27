@@ -1,7 +1,7 @@
 import {
   Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware,
 } from 'type-graphql';
-import { validate, ValidationError } from 'class-validator';
+import { validate } from 'class-validator';
 
 import { Context } from '../../../lib/types';
 
@@ -41,7 +41,7 @@ export class JobResolver {
   ): Promise<GqlJob | null> {
     console.log('hitting');
     try {
-      await validateInput(validate, createJobInput);
+      await validateInput(createJobInput);
     } catch (e) {
       console.log('Error input');
       throw new Error(e);

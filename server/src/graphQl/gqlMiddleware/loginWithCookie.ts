@@ -6,7 +6,6 @@ import { Context } from '../../lib/types';
 import { cookieOptions } from '../../lib/utils/cookieOptions';
 
 export const LogInWithCookie: MiddlewareFn<Context> = async ({ context: { req, res, EmployeeModel } }, next: NextFn) => {
-  const token = crypto.randomBytes(16).toString('hex');
   let employee;
   if (!req.signedCookies.loggedInEmployee) {
     console.log('Hitting next');
@@ -27,7 +26,6 @@ export const LogInWithCookie: MiddlewareFn<Context> = async ({ context: { req, r
     res.clearCookie('loggedInEmployee', cookieOptions);
     throw new AuthenticationError('You are not authenticated please sign in');
   } else {
-    employee.token = token;
     await employee.save();
     return employee;
   }

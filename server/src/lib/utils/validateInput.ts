@@ -1,9 +1,9 @@
-import { ValidationError } from 'class-validator';
+import { ValidationError, validate } from 'class-validator';
 
-export const validateInput = async (validateFn, inputToValidate) => {
+export const validateInput = async (inputToValidate) => {
   let errors;
   try {
-    errors = await validateFn(inputToValidate, { validationError: { target: false } });
+    errors = await validate(inputToValidate, { validationError: { target: false } });
   } catch (e) {
     throw new Error(e);
   }

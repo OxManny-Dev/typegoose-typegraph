@@ -51,7 +51,7 @@ export class EmployeeResolver {
   ): Promise<GqlEmployee | null> {
     console.log('hitting');
     try {
-      await validateInput(validate, createEmployeeInput);
+      await validateInput(createEmployeeInput);
     } catch (e) {
       throw new Error(e);
     }
@@ -79,17 +79,10 @@ export class EmployeeResolver {
     // Place holder variable for new employee
     let newEmployee;
     let newAccount;
-    let errors: ValidationError[];
     try {
-      errors = await validate(signUpInput, { validationError: { target: false } });
+      await validateInput(signUpInput);
     } catch (e) {
       throw new Error(e);
-    }
-
-    if (errors.length > 0) {
-      console.log(errors);
-      const messages: string[] = errors.map((error: ValidationError) => Object.values(error.constraints)).flat();
-      throw new Error(messages.join(' '));
     }
 
     // Check if employee exists and if so, throw an error, otherwise create account
