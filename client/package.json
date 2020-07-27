@@ -41,7 +41,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "codegen:schema": "npx apollo client:download-schema --endpoint=http://localhost:3001/graphql",
-    "codegen:generate": "npx apollo client:codegen --localSchemaFile=schema.json --includes=src/lib/graphql/queries/Employees/*.ts --excludes=src/assets/**/*.ts --globalTypesFile=./src/lib/graphql/globalTypes.ts --target=typescript"
+    "codegen:generate": "npx apollo client:codegen --localSchemaFile=schema.json --includes=src/lib/graphql/mutations/CreateEmployee/*.ts --excludes=src/assets/**/*.ts --globalTypesFile=./src/lib/graphql/globalTypes.ts --target=typescript"
   },
   "eslintConfig": {
     "extends": "react-app"

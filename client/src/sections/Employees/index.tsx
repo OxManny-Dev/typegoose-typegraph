@@ -11,9 +11,9 @@ import { fetchEmployees } from '../../lib/graphql/queries/Employees/__generated_
 // Mutations
 import { CREATE_EMPLOYEE } from '../../lib/graphql/mutations/CreateEmployee';
 import {
-  CreateEmployee as CreateEmployeeData,
-  CreateEmployeeVariables,
-} from '../../lib/graphql/mutations/CreateEmployee/__generated__/CreateEmployee';
+  createEmployee as createEmployeeData,
+  createEmployeeVariables,
+} from '../../lib/graphql/mutations/CreateEmployee/__generated__/createEmployee';
 import { CreateEmployeeInput } from '../../lib/graphql/globalTypes';
 
 
@@ -70,19 +70,22 @@ const SelectFieldInput = (
 
   const ROLE_TYPES = [
     {
-      value: 'MANAGER'
+      value: 'Admin'
     },
     {
-      value: 'INPUT_USER'
+      value: 'Manager'
     },
     {
-      value: 'FIELD_USER'
+      value: 'InputUser'
     },
     {
-      value: 'SETUP_USER'
+      value: 'FieldUser'
     },
     {
-      value: 'WORKER'
+      value: 'SetupUser'
+    },
+    {
+      value: 'Worker'
     }
   ];
   return (
@@ -113,7 +116,7 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
   const [createEmployee, {
     loading: createEmployeeLoading,
     error: createEmployeeError,
-  }] = useMutation<CreateEmployeeData, CreateEmployeeVariables>(CREATE_EMPLOYEE, {
+  }] = useMutation<createEmployeeData, createEmployeeVariables>(CREATE_EMPLOYEE, {
     update: (cache, { data: CreateEmployee }) => {
       const { fetchEmployees: employeesData } = cache.readQuery<fetchEmployees>({
         query: FETCH_EMPLOYEES
@@ -122,7 +125,7 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
         cache.writeQuery({
           query: FETCH_EMPLOYEES,
           data: {
-            employees: [...employeesData, CreateEmployee?.CreateEmployee]
+            employees: [...employeesData, CreateEmployee?.createEmployee]
           }
         });
       }

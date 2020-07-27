@@ -58,6 +58,7 @@ export const App = () => {
       }
     },
     onError: error => {
+      console.log(error);
       history.push('/');
       sessionStorage.removeItem('employee');
     }
@@ -67,6 +68,7 @@ export const App = () => {
   useEffect(() => {
     console.log(employee.loggedInEmployee?.token);
     if (!employee.loggedInEmployee?.token) {
+      // Must pass these in
       signInUserRef.current({variables: { input: { email: '', password: ''} }});
     }
   }, [employee]);

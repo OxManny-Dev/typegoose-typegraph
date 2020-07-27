@@ -85,6 +85,13 @@ export class Employee {
   @Field({ nullable: true })
   logOut?: boolean;
 
+  /*
+  *
+  * END OF PROPERTIES FOR GQL AND MONGOOSE
+  *
+  *
+  * */
+
   // Model methods
   async comparePassword(candidatePassword: string): Promise<boolean> {
     const employee = this;
@@ -97,7 +104,7 @@ export class Employee {
   }
 
   // Static class methods
-  // Getting an Employees account
+  // Returns the LoggedIn Users Account
   public static async getAuthEmployeeAccount(this: ReturnModelType<typeof Employee>, id: string) {
     let authenticatedEmployee;
     let account;
@@ -111,8 +118,7 @@ export class Employee {
       throw new Error('Error in getAuthenticatedEmployee');
     }
     try {
-      account = await AccountModel.findOne(authenticatedEmployee.account);
-      console.log(account);
+      account = await AccountModel.findById(authenticatedEmployee.account._id);
     } catch (e) {
       console.log(e);
       throw new Error(e);

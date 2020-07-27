@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost';
 
 export const CREATE_EMPLOYEE = gql`
-  mutation CreateEmployee($input: CreateEmployeeInput) {
-    CreateEmployee(input: $input) {
+  mutation createEmployee($input: CreateEmployeeInput!) {
+    createEmployee(createEmployeeInput: $input) {
       id
       firstName
       lastName
@@ -10,7 +10,6 @@ export const CREATE_EMPLOYEE = gql`
       role
       account {
         id
-        name
       }
     }
   }

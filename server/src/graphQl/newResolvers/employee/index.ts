@@ -11,10 +11,10 @@ import { Account as GqlAccount, Employee as GqlEmployee } from '../../Entities';
 import { AuthenticateEmployee } from '../../gqlMiddleware/authenticate';
 import { LogInWithCookie } from '../../gqlMiddleware/loginWithCookie';
 
-import { SignUpInput, SignInInput } from '../../inputTypes/employeeInput';
+import { SignUpInput, SignInInput, CreateEmployeeInput } from '../../inputTypes/employeeInput';
 
 import { cookieOptions } from '../../../lib/utils/cookieOptions';
-
+import { validateInput } from '../../../lib/utils/validateInput';
 @Resolver((_of: void) => GqlEmployee)
 export class EmployeeResolver {
   // Queries
@@ -32,6 +32,41 @@ export class EmployeeResolver {
     }
   }
 
+  /*
+  *
+  *
+  * End of queries
+  *
+  *
+  *
+  */
+
+  /* CRUD MUTATIONS */
+
+  @Mutation((_returns: void) => GqlEmployee)
+  async createEmployee(
+    @Arg('createEmployeeInput') createEmployeeInput: CreateEmployeeInput,
+    @Ctx() { req, EmployeeModel, AccountModel }: Context,
+  ): Promise<GqlEmployee | null> {
+    try {
+      await validateInput(validate, createEmployeeInput);
+    } catch (e) {
+      throw new Error(e);
+    }
+    try {
+      const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
+      const newEmployee = await new EmployeeModel({ ...createEmployeeInput, account: employeeAccount });
+      // Wants you yo save first then create
+      await newEmployee.save();
+      employeeAccount.employees.push(newEmployee);
+      await employeeAccount.save();
+      return newEmployee;
+    } catch (e) {
+      console.log('creating error', e);
+      throw new Error(e);
+    }
+  }
+
   // Mutations
   @Mutation((_returns: void) => GqlEmployee)
   async signUp(
@@ -43,16 +78,12 @@ export class EmployeeResolver {
     let newEmployee;
     let newAccount;
     let errors: ValidationError[];
-    const token = crypto.randomBytes(16).toString('hex');
-    // Validate Inputs
     try {
       errors = await validate(signUpInput, { validationError: { target: false } });
     } catch (e) {
       throw new Error(e);
     }
 
-    // Gets the error messages validate, takes each error Object
-    // and combines all input errors into 1 string
     if (errors.length > 0) {
       console.log(errors);
       const messages: string[] = errors.map((error: ValidationError) => Object.values(error.constraints)).flat();
@@ -69,13 +100,13 @@ export class EmployeeResolver {
     if (newEmployee) {
       throw new Error('Account already exists. Please try a different email address');
     }
+
     try {
-      newEmployee = await new EmployeeModel({ ...signUpInput, token, role: 'Admin' }).save();
-      newAccount = await new AccountModel({ admin: newEmployee.id, name: faker.random.word() }).save();
-      newEmployee.account = newAccount;
-      newAccount.employees.push(newEmployee);
+      const token = crypto.randomBytes(16).toString('hex');
+      newEmployee = await new EmployeeModel({ ...signUpInput, token, role: 'Admin' });
+      newAccount = await new AccountModel({ admin: newEmployee.id, name: faker.random.word(), employees: [newEmployee] }).save();
+      newEmployee.account = newAccount.id;
       await newEmployee.save();
-      await newAccount.save();
     } catch (e) {
       throw new Error(e);
     }
@@ -91,8 +122,9 @@ export class EmployeeResolver {
     return null;
   }
 
-  // @Mutation(returns => GqlEmployee)
-  // async signIn(@Args())
+  /*
+  * End of SignUp
+  * */
 
   @Mutation((_returns) => GqlEmployee)
   @UseMiddleware(LogInWithCookie)
@@ -107,6 +139,7 @@ export class EmployeeResolver {
     // Look for Employee if email exist
     try {
       employee = await EmployeeModel.findOne({ email: signInInput.email });
+      console.log('found', employee);
     } catch (e) {
       console.log(e);
       throw new Error(e);
@@ -132,15 +165,27 @@ export class EmployeeResolver {
     }
   }
 
+  /*
+  *
+  * End Of Sign In
+  * */
+
   @Mutation((_returns: void) => GqlEmployee)
   signOut(@Ctx() { res }: Context) {
-    try {
-      res.clearCookie('loggedInEmployee', cookieOptions);
-      return { logOut: true };
-    } catch (error) {
-      throw new Error(`Failed to log out: ${error}`);
-    }
+    res.clearCookie('loggedInEmployee', cookieOptions);
+    return { logOut: true };
   }
+
+  /*
+  *
+  * End of sign out
+  *
+  * */
+
+  /*
+  *
+  * Field Resolvers
+  * */
 
   @FieldResolver()
   id(@Root() currentEmployee: GqlEmployee) {

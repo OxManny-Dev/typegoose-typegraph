@@ -44,7 +44,7 @@ const PasswordInput = (field: WrappedFieldProps) => {
 export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
   const employee = useSelector<IAppState, IEmployeeState>(state => state.employee);
   const [
-    signInUser,
+    signUp,
     {
       data: employeeData,
       loading: signUpLoading,
@@ -58,10 +58,9 @@ export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
   * */
   const onSubmit: FormSubmitHandler<SignUpInput> = async (formValues, dispatch) => {
     try {
-      const { data } = await signInUser({ variables: { input: formValues } });
+      const { data } = await signUp({ variables: { input: formValues } });
       console.log(data);
       sessionStorage.setItem('employee', JSON.stringify(data?.signUp));
-
       dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.signUp });
     } catch (e) {
       console.log(e);
