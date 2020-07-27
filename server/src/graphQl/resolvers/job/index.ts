@@ -10,7 +10,7 @@ import { CreateJobInput } from '../../inputTypes/jobInput';
 import { AuthenticateEmployee } from '../../gqlMiddleware/authenticate';
 import { validateInput } from '../../../lib/utils/validateInput';
 
-import { Job as GqlJob } from '../../Entities';
+import { Employee as GqlEmployee, Job as GqlJob } from '../../Entities';
 @Resolver((_of) => GqlJob)
 export class JobResolver {
   @Query((_returns) => [GqlJob])
@@ -22,7 +22,9 @@ export class JobResolver {
     try {
       const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
       if (employeeAccount) {
-        return (await employeeAccount.getJobs()).jobs;
+        const jobs = await employeeAccount.getJobs();
+        console.log('i am jobs', jobs);
+        return jobs.jobs;
       }
     } catch (e) {
       console.log(e);
@@ -61,5 +63,10 @@ export class JobResolver {
       throw new Error(e);
     }
     return null;
+  }
+
+  @FieldResolver()
+  id(@Root() currentEmployee: GqlEmployee) {
+    return currentEmployee._id.toString();
   }
 }
