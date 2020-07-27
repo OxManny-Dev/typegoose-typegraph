@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import SendIcon from '@material-ui/icons/Send';
 
 import { SIGN_UP } from './../../lib/graphql/mutations';
-import { signUpForAccount as signUpForAccountData, signUpForAccountVariables } from '../../lib/graphql/mutations/SignUp/__generated__/signUpForAccount';
+import { signUp as signUpData, signUpVariables } from '../../lib/graphql/mutations/SignUp/__generated__/signUp';
 import { SignUpInput } from '../../lib/graphql/globalTypes';
 import { IAppState } from '../../reducers';
 import { Redirect } from 'react-router-dom';
@@ -50,7 +50,7 @@ export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
       loading: signUpLoading,
       error: signUpError
     }
-  ] = useMutation<signUpForAccountData, signUpForAccountVariables>(SIGN_UP);
+  ] = useMutation<signUpData, signUpVariables>(SIGN_UP);
   const { handleSubmit} = props;
 
   /*
@@ -60,9 +60,9 @@ export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
     try {
       const { data } = await signInUser({ variables: { input: formValues } });
       console.log(data);
-      sessionStorage.setItem('employee', JSON.stringify(data?.signUpForAccount));
+      sessionStorage.setItem('employee', JSON.stringify(data?.signUp));
 
-      dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.signUpForAccount });
+      dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.signUp });
     } catch (e) {
       console.log(e);
     }

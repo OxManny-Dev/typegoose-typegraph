@@ -10,16 +10,18 @@ type Account {
 
 """A User or Employee of the program"""
 type Employee {
-  account: Account!
+  account: Account
   email: String
   firstName: String
-  id: String!
+  id: String
   lastName: String
+  logOut: Boolean!
   token: String
 }
 
 type Mutation {
-  signUpForAccount(signUpInput: SignUpInput!): Employee!
+  signOut: Employee!
+  signUp(signUpInput: SignUpInput!): Employee!
 }
 
 type Query {

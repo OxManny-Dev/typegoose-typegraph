@@ -32,8 +32,8 @@ export class Employee {
   // Any field we don't decorate with @Field here is for this class only
   readonly _id!: ObjectId;
 
-  @Field()
-  id!: string;
+  @Field({ nullable: true })
+  id?: string;
 
   @Property({
     required: true,
@@ -42,7 +42,7 @@ export class Employee {
     trim: true,
   })
   @Field({ nullable: true })
-  public email!: string;
+  public email?: string;
 
   @Property({
     trim: true,
@@ -76,8 +76,11 @@ export class Employee {
   public token?: string;
 
   @Property({ ref: Account, type: Schema.Types.ObjectId })
-  @Field((_type: void) => Account!)
-  public account!: Ref<Account>;
+  @Field((_type: void) => Account, { nullable: true })
+  public account?: Ref<Account>;
+
+  @Field()
+  public logOut?: boolean;
 
   public async comparePassword(candidatePassword: string): Promise<boolean> {
     const employee = this;

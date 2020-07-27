@@ -4,9 +4,9 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: SignOut
+// GraphQL mutation operation: signOut
 // ====================================================
 
-export interface SignOut {
-  SignOut: boolean;
+export interface signOut {
+  signOut: boolean;
 }

@@ -25,7 +25,6 @@ export const createApolloServer = async function () {
     // use document converting middleware
     globalMiddlewares: [TypegooseMiddleware],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
-
     // use ObjectId scalar mapping
     scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
     validate: false,

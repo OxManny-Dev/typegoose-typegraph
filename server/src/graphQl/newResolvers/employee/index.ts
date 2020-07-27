@@ -19,6 +19,7 @@ const cookieOptions = {
 
 @Resolver((_of: void) => GqlEmployee)
 export class EmployeeResolver {
+  // Queries
   @Query((_returns: void) => [GqlEmployee])
   async employees(
     @Ctx() { EmployeeModel }: Context,
@@ -42,8 +43,9 @@ export class EmployeeResolver {
     }
   }
 
+  // Mutations
   @Mutation((_returns: void) => GqlEmployee)
-  async signUpForAccount(
+  async signUp(
     // You must use a single string for Arg
     @Arg('signUpInput') signUpInput: SignUpInput,
     @Ctx() { EmployeeModel, AccountModel, res }: Context,
@@ -70,9 +72,14 @@ export class EmployeeResolver {
     // Check if employee exists and if so, throw an error, otherwise create account
     try {
       newEmployee = await EmployeeModel.findOne({ email: signUpInput.email });
-      if (newEmployee) {
-        throw new Error('Account already exists. Please try a different email address');
-      }
+    } catch (e) {
+      throw new Error(e);
+    }
+
+    if (newEmployee) {
+      throw new Error('Account already exists. Please try a different email address');
+    }
+    try {
       newEmployee = await new EmployeeModel({ ...signUpInput, token }).save();
       newEmployee.account = await new AccountModel({ admin: newEmployee.id, name: faker.random.word() }).save();
       await newEmployee.save();
@@ -80,16 +87,28 @@ export class EmployeeResolver {
       throw new Error(e);
     }
 
+    // If there's an employee, create a cookie for him using id
     if (newEmployee) {
-      res.cookie('employee', newEmployee.id, {
+      res.cookie('loggedInEmployee', newEmployee._id, {
         ...cookieOptions,
         maxAge: 1000 * 60 * 60 * 24,
       });
-      console.log(newEmployee);
       return newEmployee;
     }
-
     return null;
+  }
+
+  // @Mutation((_returns) => GqlEmployee)
+  // async signIn
+
+  @Mutation((_returns: void) => GqlEmployee)
+  signOut(@Ctx() { res }: Context) {
+    try {
+      res.clearCookie('loggedInEmployee', cookieOptions);
+      return { logOut: true };
+    } catch (error) {
+      throw new Error(`Failed to log out: ${error}`);
+    }
   }
 
   @FieldResolver()
@@ -105,8 +124,6 @@ export class EmployeeResolver {
     let account: GqlAccount;
     try {
       if (parent.account) {
-        console.log(parent);
-        // account = await parent.getEmployeeAccount();
         account = await AccountModel.findById(parent.account._id.toString()).populate('admin');
         return account;
       }

@@ -15,7 +15,7 @@ import { appStyles } from './appStyle';
 // Mutation for logout
 import { useMutation } from '@apollo/react-hooks';
 import { SIGN_OUT } from '../../lib/graphql/mutations/SignOut';
-import { SignOut } from '../../lib/graphql/mutations/SignOut/__generated__/SignOut';
+import { signOut } from '../../lib/graphql/mutations/SignOut/__generated__/signOut';
 
 // Redux for logout
 import { useDispatch } from 'react-redux';
@@ -31,7 +31,7 @@ export const AppBarNav: FC<Props> = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [signOutUser] = useMutation<{ SignOut: boolean }, SignOut>(SIGN_OUT, {
+  const [signOutUser] = useMutation<{ SignOut: boolean }, signOut>(SIGN_OUT, {
     onCompleted: data => {
       console.log(data.SignOut);
       if (data) {
