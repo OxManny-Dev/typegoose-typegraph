@@ -4,10 +4,9 @@ import {
 import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
-import { Schema } from 'mongoose';
-import { Employee, EmployeeModel } from '..';
+import { Employee, Job } from '..';
 
-@ObjectType()
+@ObjectType({ description: 'Account of the User' })
 export class Account {
   // readonly _id!: ObjectId;
   readonly _id!: ObjectId;
@@ -22,6 +21,10 @@ export class Account {
   @Property({ ref: 'Employee', default: [] })
   @Field(() => [Employee])
   employees?: Ref<Employee>[];
+
+  @Property({ ref: 'Job', default: [] })
+  @Field((_returns) => [Job], { nullable: true })
+  jobs?: Ref<Job>[];
 
   public async getEmployees(this: DocumentType<Account>) {
     try {

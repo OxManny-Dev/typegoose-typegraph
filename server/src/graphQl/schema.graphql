@@ -3,10 +3,12 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""Account of the User"""
 type Account {
   admin: Employee!
   employees: [Employee!]!
   id: String
+  jobs: [Job!]
 }
 
 input CreateEmployeeInput {
@@ -23,10 +25,21 @@ type Employee {
   email: String
   firstName: String
   id: String
+  jobs: [Job!]
   lastName: String
   logOut: Boolean
   role: String
   token: String
+}
+
+"""The job model"""
+type Job {
+  account: Account
+  employees: [Employee!]!
+  id: String
+  jobName: String
+  pay: Float!
+  pieces: Float!
 }
 
 type Mutation {

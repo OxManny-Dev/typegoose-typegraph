@@ -4,7 +4,7 @@ import {
 import { Field, ObjectType } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcryptjs';
-import { Account, AccountModel } from '../Account';
+import { Account, AccountModel, Job } from '..';
 // import { Schema } from 'mongoose';
 
 import { EmployeeRoleType } from '../../../lib/types/modelTypes';
@@ -78,9 +78,13 @@ export class Employee {
   @Field({ nullable: true })
   token?: string;
 
-  @Property({ ref: Account, type: ObjectId })
+  @Property({ ref: 'Account' })
   @Field((_type: void) => Account, { nullable: true })
   account?: Ref<Account>;
+
+  @Property({ ref: 'Job', default: [] })
+  @Field((_returns) => [Job], { nullable: true })
+  jobs?: Ref<Job>[];
 
   @Field({ nullable: true })
   logOut?: boolean;
