@@ -1,5 +1,5 @@
 import {
-  Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root,
+  Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware,
 } from 'type-graphql';
 import { validate, ValidationError } from 'class-validator';
 
@@ -8,7 +8,9 @@ import faker from 'faker';
 import { Context } from '../../../lib/types';
 import { Account as GqlAccount, Employee as GqlEmployee } from '../../Entities';
 
-import { SignUpInput } from '../../inputTypes/employeeInput';
+import { AuthenticateEmployee } from '../../gqlMiddleware/authenticate';
+
+import { SignUpInput, SignInInput } from '../../inputTypes/employeeInput';
 
 const cookieOptions = {
   httpOnly: true,
@@ -21,6 +23,7 @@ const cookieOptions = {
 export class EmployeeResolver {
   // Queries
   @Query((_returns: void) => [GqlEmployee])
+  @UseMiddleware(AuthenticateEmployee)
   async employees(
     @Ctx() { EmployeeModel }: Context,
   ): Promise<GqlEmployee[] | null> {
@@ -97,8 +100,18 @@ export class EmployeeResolver {
     return null;
   }
 
-  // @Mutation((_returns) => GqlEmployee)
-  // async signIn
+  // @Mutation(returns => GqlEmployee)
+  // async signIn(@Args())
+
+  @Mutation((_returns) => GqlEmployee)
+  async signIn(
+    @Arg('signInInput') signInInput: SignInInput,
+    @Ctx() {
+        req, res, EmployeeModel, AccountModel,
+      } : Context,
+  ) {
+    const token = crypto.randomBytes(16).toString('hex');
+  }
 
   @Mutation((_returns: void) => GqlEmployee)
   signOut(@Ctx() { res }: Context) {

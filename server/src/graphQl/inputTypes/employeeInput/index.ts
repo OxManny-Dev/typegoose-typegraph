@@ -1,14 +1,32 @@
 import { Field, InputType } from 'type-graphql';
-import { MaxLength, Length, IsEmail, ValidatePromise } from 'class-validator';
+import {
+  Length,
+  IsEmail,
+  IsString,
+} from 'class-validator';
 import { Employee as GqlEmployee } from '../../Entities/Employee';
 
 @InputType()
-export class SignUpInput implements Partial<GqlEmployee> {
+export class SignInInput implements Partial<GqlEmployee> {
   @Field()
+  @IsString()
   @IsEmail({}, { message: 'You must provide a valid email address' })
-  public email: string;
+  email: string;
 
   @Field()
+  @IsString()
   @Length(6, 20, { message: 'Password must be at least 6 characters long' })
-  public password?: string;
+  password?: string;
 }
+
+@InputType()
+export class SignUpInput extends SignInInput implements Partial<GqlEmployee> {
+}
+
+// input CreateEmployeeInput {
+//   email: String!
+//   firstName: String
+//   lastName: String
+//   password: String!
+//   role: String!
+// }
