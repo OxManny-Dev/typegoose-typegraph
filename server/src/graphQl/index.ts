@@ -7,7 +7,9 @@ import { buildSchema } from 'type-graphql';
 import { TypegooseMiddleware } from '../middlewares/typegoose-middleware';
 import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
 
-import { EmployeeModel, AccountModel, JobModel } from './Entities';
+import {
+  EmployeeModel, AccountModel, JobModel, CrewModel,
+} from './Entities';
 import { EmployeeResolver, JobResolver } from './resolvers';
 // import { buildAuthContext } from './context';
 /*
@@ -33,6 +35,7 @@ export const createApolloServer = async function () {
     schema,
     context: ({ req, res }) => ({
       AccountModel,
+      CrewModel,
       EmployeeModel,
       JobModel,
       req,

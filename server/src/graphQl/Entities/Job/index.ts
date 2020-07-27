@@ -4,7 +4,7 @@ import {
 import { ObjectType, Field } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
-import { Account, Employee } from '..';
+import { Account, Crew, Employee } from '..';
 
 @ObjectType({ description: 'The job model' })
 export class Job {
@@ -20,6 +20,10 @@ export class Job {
   @Property({ ref: 'Employee', default: [] })
   @Field(() => [Employee])
   employees?: Ref<Employee>[];
+
+  @Property({ ref: 'Crew', nullable: true })
+  @Field((_returns) => [Crew], { nullable: true })
+  crews?: Ref<Crew>[]
 
   @Property({ ref: 'Account', required: true })
   @Field((_returns) => Account, { nullable: true })

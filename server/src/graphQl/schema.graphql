@@ -6,7 +6,8 @@
 """Account of the User"""
 type Account {
   admin: Employee!
-  employees: [Employee!]!
+  crews: [Crew!]
+  employees: [Employee!]
   id: String
   jobs: [Job!]
 }
@@ -23,9 +24,18 @@ input CreateJobInput {
   jobName: String!
 }
 
+"""The different crews of the account"""
+type Crew {
+  account: Account
+  crewMembers: [Employee!]
+  id: String
+  jobs: [Job!]
+}
+
 """A User or Employee of the program"""
 type Employee {
   account: Account
+  crews: [Crew!]
   email: String
   firstName: String
   id: String
@@ -39,6 +49,7 @@ type Employee {
 """The job model"""
 type Job {
   account: Account
+  crews: [Crew!]
   employees: [Employee!]!
   id: String
   jobName: String
