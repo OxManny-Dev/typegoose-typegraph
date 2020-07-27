@@ -14,7 +14,7 @@
         "description": null,
         "fields": [
           {
-            "name": "employees",
+            "name": "fetchEmployees",
             "description": null,
             "args": [],
             "type": {
@@ -97,6 +97,18 @@
             "deprecationReason": null
           },
           {
+            "name": "role",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "token",
             "description": null,
             "args": [],
@@ -154,17 +166,13 @@
         "description": null,
         "fields": [
           {
-            "name": "_id",
+            "name": "id",
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -245,13 +253,9 @@
                 "name": "signInInput",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SignInInput",
-                    "ofType": null
-                  }
+                  "kind": "INPUT_OBJECT",
+                  "name": "SignInInput",
+                  "ofType": null
                 },
                 "defaultValue": null
               }

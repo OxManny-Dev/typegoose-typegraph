@@ -4,8 +4,9 @@
 # -----------------------------------------------
 
 type Account {
-  _id: String!
   admin: Employee!
+  employees: [Employee!]!
+  id: String
 }
 
 """A User or Employee of the program"""
@@ -16,6 +17,7 @@ type Employee {
   id: String
   lastName: String
   logOut: Boolean
+  role: String
   token: String
 }
 
@@ -26,7 +28,7 @@ type Mutation {
 }
 
 type Query {
-  employees: [Employee!]!
+  fetchEmployees: [Employee!]!
 }
 
 input SignInInput {

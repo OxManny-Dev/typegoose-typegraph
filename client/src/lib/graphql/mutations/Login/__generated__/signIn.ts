@@ -3,23 +3,23 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SignInInput } from "./../../../globalTypes";
+import { SignInInput } from "../../../globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: SignIn
+// GraphQL mutation operation: signIn
 // ====================================================
 
-export interface SignIn_SignIn {
+export interface signIn_signIn {
   __typename: "Employee";
   id: string | null;
   email: string | null;
   token: string | null;
 }
 
-export interface SignIn {
-  SignIn: SignIn_SignIn;
+export interface signIn {
+  signIn: signIn_signIn;
 }
 
-export interface SignInVariables {
-  input?: SignInInput | null;
+export interface signInVariables {
+  input: SignInInput;
 }

@@ -7,8 +7,9 @@ export const AuthenticateEmployee: MiddlewareFn<Context> = async ({ context: { r
   let employee;
   try {
     employee = await EmployeeModel
-      .findOne({ _id: req.signedCookies.employee, token });
+      .findOne({ _id: req.signedCookies.loggedInEmployee, token });
   } catch (e) {
+    console.log('inside authenticate employee', e);
     throw new AuthenticationError('You must be authenticated to do that');
   }
 

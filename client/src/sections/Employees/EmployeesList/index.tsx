@@ -3,7 +3,7 @@ import { Container } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 // Query
 import { FETCH_EMPLOYEES } from '../../../lib/graphql/queries/Employees';
-import { employees } from '../../../lib/graphql/queries/Employees/__generated__/employees';
+import { fetchEmployees } from '../../../lib/graphql/queries/Employees/__generated__/fetchEmployees';
 
 // Redux
 import { IAppState } from '../../../reducers';
@@ -27,9 +27,10 @@ export const EmployeeListComponent = React.memo(() => {
   const {
     error: fetchEmployeesError,
     loading: fetchEmployeesLoading,
-  } = useQuery<employees>(FETCH_EMPLOYEES, {
+  } = useQuery<fetchEmployees>(FETCH_EMPLOYEES, {
     onCompleted: data => {
-      dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: data.employees });
+      console.log('data', data);
+      dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: data.fetchEmployees });
     },
   });
 

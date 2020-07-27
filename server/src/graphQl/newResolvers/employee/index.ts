@@ -20,23 +20,14 @@ export class EmployeeResolver {
   // Queries
   @Query((_returns: void) => [GqlEmployee])
   @UseMiddleware(AuthenticateEmployee)
-  async employees(
-    @Ctx() { EmployeeModel }: Context,
+  async fetchEmployees(
+    @Ctx() { req, EmployeeModel }: Context,
   ): Promise<GqlEmployee[] | null> {
-    // fake async in this example
-    console.log(EmployeeModel);
     try {
-      const employees = await EmployeeModel.find()
-        .populate({
-          path: 'account',
-          populate: { path: 'admin' },
-        });
-
-      if (employees) {
-        return employees;
-      }
-      return null;
+      const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
+      return (await employeeAccount.getEmployees()).employees;
     } catch (e) {
+      console.log(e);
       throw new Error(e);
     }
   }
@@ -50,6 +41,7 @@ export class EmployeeResolver {
   ): Promise<GqlEmployee | null> {
     // Place holder variable for new employee
     let newEmployee;
+    let newAccount;
     let errors: ValidationError[];
     const token = crypto.randomBytes(16).toString('hex');
     // Validate Inputs
@@ -78,9 +70,12 @@ export class EmployeeResolver {
       throw new Error('Account already exists. Please try a different email address');
     }
     try {
-      newEmployee = await new EmployeeModel({ ...signUpInput, token }).save();
-      newEmployee.account = await new AccountModel({ admin: newEmployee.id, name: faker.random.word() }).save();
+      newEmployee = await new EmployeeModel({ ...signUpInput, token, role: 'Admin' }).save();
+      newAccount = await new AccountModel({ admin: newEmployee.id, name: faker.random.word() }).save();
+      newEmployee.account = newAccount;
+      newAccount.employees.push(newEmployee);
       await newEmployee.save();
+      await newAccount.save();
     } catch (e) {
       throw new Error(e);
     }

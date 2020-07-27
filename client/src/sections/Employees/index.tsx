@@ -6,7 +6,7 @@ import { TextField, Button, MenuItem, Grid, Container } from '@material-ui/core/
 import { useMutation } from '@apollo/react-hooks';
 
 import { FETCH_EMPLOYEES } from '../../lib/graphql/queries/Employees';
-import { employees } from '../../lib/graphql/queries/Employees/__generated__/employees';
+import { fetchEmployees } from '../../lib/graphql/queries/Employees/__generated__/fetchEmployees';
 
 // Mutations
 import { CREATE_EMPLOYEE } from '../../lib/graphql/mutations/CreateEmployee';
@@ -115,7 +115,7 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
     error: createEmployeeError,
   }] = useMutation<CreateEmployeeData, CreateEmployeeVariables>(CREATE_EMPLOYEE, {
     update: (cache, { data: CreateEmployee }) => {
-      const { employees: employeesData } = cache.readQuery<employees>({
+      const { fetchEmployees: employeesData } = cache.readQuery<fetchEmployees>({
         query: FETCH_EMPLOYEES
       })!;
       if (employeesData) {
@@ -126,7 +126,7 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
           }
         });
       }
-      const { employees: newEmployees } = cache.readQuery<employees>({
+      const { fetchEmployees: newEmployees } = cache.readQuery<fetchEmployees>({
         query: FETCH_EMPLOYEES
       })!;
       dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: newEmployees });

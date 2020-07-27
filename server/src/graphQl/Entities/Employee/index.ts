@@ -1,14 +1,20 @@
 import {
-  getModelForClass,
-  pre,
-  prop as Property,
-  Ref,
+  getModelForClass, pre, prop as Property, QueryMethod, Ref, ReturnModelType,
 } from '@typegoose/typegoose';
 import { Field, ObjectType } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { Account } from '../Account';
+import { Account, AccountModel } from '../Account';
+
+export enum RoleType {
+  Admin = 'Admin',
+  Manager = 'Manager',
+  InputUser = 'InputUser',
+  FieldUser = 'FieldUser',
+  SetupUser = 'SetupUser',
+  Worker = 'Worker',
+}
 
 @ObjectType({ description: 'A User or Employee of the program' })
 @pre<Employee>('save', async function (next) {
@@ -42,7 +48,7 @@ export class Employee {
     trim: true,
   })
   @Field({ nullable: true })
-  public email?: string;
+  email?: string;
 
   @Property({
     trim: true,
@@ -54,7 +60,7 @@ export class Employee {
     },
   })
   @Field({ nullable: true })
-  public firstName?: string;
+  firstName?: string;
 
   @Property({
     trim: true,
@@ -66,23 +72,28 @@ export class Employee {
     },
   })
   @Field({ nullable: true })
-  public lastName?: string;
+  lastName?: string;
+
+  @Property({ enum: RoleType })
+  @Field({ nullable: true })
+  role?: string;
 
   @Property()
-  public password!: string;
+  password!: string;
 
   @Property()
   @Field({ nullable: true })
-  public token?: string;
+  token?: string;
 
   @Property({ ref: Account, type: Schema.Types.ObjectId })
   @Field((_type: void) => Account, { nullable: true })
-  public account?: Ref<Account>;
+  account?: Ref<Account>;
 
   @Field({ nullable: true })
-  public logOut?: boolean;
+  logOut?: boolean;
 
-  public async comparePassword(candidatePassword: string): Promise<boolean> {
+  // Model methods
+  async comparePassword(candidatePassword: string): Promise<boolean> {
     const employee = this;
     try {
       const isMatch: boolean = await bcrypt.compare(candidatePassword, employee.password);
@@ -92,8 +103,35 @@ export class Employee {
     }
   }
 
-  // Might be useful later
-  // public async getEmployeeAccount () {
+  // Static class methods
+  // Getting an Employees account
+  public static async getAuthEmployeeAccount(this: ReturnModelType<typeof Employee>, id: string) {
+    let authenticatedEmployee;
+    let account;
+    try {
+      authenticatedEmployee = await this.findById(id).populate('account');
+      console.log('authenticated', authenticatedEmployee);
+    } catch (e) {
+      throw new Error(e);
+    }
+    if (!authenticatedEmployee) {
+      throw new Error('Error in getAuthenticatedEmployee');
+    }
+    try {
+      account = await AccountModel.findOne(authenticatedEmployee.account);
+      console.log(account);
+    } catch (e) {
+      console.log(e);
+      throw new Error(e);
+    }
+    if (!account) {
+      throw new Error('Error: Error in getting account. You must have an account to do that');
+    }
+    console.log('account', account);
+    return account;
+  }
+  // Might be useful later account does have this method
+  // async getEmployeeAccount () {
   //   try {
   //     return await AccountModel.findById(this.account).populate({ path: 'admin', populate: { path: 'account' } });
   //   } catch (e) {
