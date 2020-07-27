@@ -15,7 +15,7 @@ type Employee {
   firstName: String
   id: String
   lastName: String
-  logOut: Boolean!
+  logOut: Boolean
   token: String
 }
 

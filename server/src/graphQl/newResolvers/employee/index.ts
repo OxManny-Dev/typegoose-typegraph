@@ -31,8 +31,7 @@ export class EmployeeResolver {
         .populate({
           path: 'account',
           populate: { path: 'admin' },
-        })
-        .exec();
+        });
 
       if (employees) {
         return employees;

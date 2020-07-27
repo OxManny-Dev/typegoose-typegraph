@@ -79,7 +79,7 @@ export class Employee {
   @Field((_type: void) => Account, { nullable: true })
   public account?: Ref<Account>;
 
-  @Field()
+  @Field({ nullable: true })
   public logOut?: boolean;
 
   public async comparePassword(candidatePassword: string): Promise<boolean> {
