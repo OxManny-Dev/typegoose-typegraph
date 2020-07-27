@@ -23,6 +23,7 @@ export class EmployeeResolver {
   async fetchEmployees(
     @Ctx() { req, EmployeeModel }: Context,
   ): Promise<GqlEmployee[] | null> {
+    console.log('fetching');
     try {
       const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
       return (await employeeAccount.getEmployees()).employees;
@@ -48,6 +49,7 @@ export class EmployeeResolver {
     @Arg('createEmployeeInput') createEmployeeInput: CreateEmployeeInput,
     @Ctx() { req, EmployeeModel, AccountModel }: Context,
   ): Promise<GqlEmployee | null> {
+    console.log('hitting');
     try {
       await validateInput(validate, createEmployeeInput);
     } catch (e) {
@@ -55,7 +57,7 @@ export class EmployeeResolver {
     }
     try {
       const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
-      const newEmployee = await new EmployeeModel({ ...createEmployeeInput, account: employeeAccount });
+      const newEmployee = await new EmployeeModel({ ...createEmployeeInput, account: employeeAccount.id });
       // Wants you yo save first then create
       await newEmployee.save();
       employeeAccount.employees.push(newEmployee);
@@ -104,6 +106,7 @@ export class EmployeeResolver {
     try {
       const token = crypto.randomBytes(16).toString('hex');
       newEmployee = await new EmployeeModel({ ...signUpInput, token, role: 'Admin' });
+      console.log('newEmployee', newEmployee);
       newAccount = await new AccountModel({ admin: newEmployee.id, name: faker.random.word(), employees: [newEmployee] }).save();
       newEmployee.account = newAccount.id;
       await newEmployee.save();

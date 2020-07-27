@@ -125,7 +125,7 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
         cache.writeQuery({
           query: FETCH_EMPLOYEES,
           data: {
-            employees: [...employeesData, CreateEmployee?.createEmployee]
+            fetchEmployees: [...employeesData, CreateEmployee?.createEmployee]
           }
         });
       }

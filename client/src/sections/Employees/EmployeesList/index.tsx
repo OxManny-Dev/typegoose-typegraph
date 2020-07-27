@@ -20,32 +20,41 @@ const columns = [
   { title: 'Role', field: 'role' },
 ];
 
-export const EmployeeListComponent = React.memo(() => {
+export const EmployeeListComponent = () => {
   const dispatch = useDispatch();
   const employeeState = useSelector<IAppState, IEmployeeState>(state => state.employee);
   // GQL QUERY
+
+  // const tabulator = useCallback(() => {
+  //   return <ReactTabulator
+  //     data={employeeState.employees}
+  //     columns={columns}
+  //     tooltips={true}
+  //     layout="fitData"
+  //   />;
+  // }, [employeeState.employees]);
+
+
   const {
+    data: fetchEmployeesData,
     error: fetchEmployeesError,
     loading: fetchEmployeesLoading,
   } = useQuery<fetchEmployees>(FETCH_EMPLOYEES, {
     onCompleted: data => {
-      console.log('data', data);
+      console.log('i am data', data);
       dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: data.fetchEmployees });
     },
+    fetchPolicy: 'cache-and-network',
   });
-
-  const tabulator = useCallback(() => {
-    return <ReactTabulator
-      data={employeeState.employees}
-      columns={columns}
-      tooltips={true}
-      layout="fitData"
-    />;
-  }, [employeeState.employees]);
 
   return (
     <Container fixed>
-      {tabulator()}
+      <ReactTabulator
+        data={employeeState.employees}
+        columns={columns}
+        tooltips={true}
+        layout="fitData"
+      />;
     </Container>
   );
-});
+}

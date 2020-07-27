@@ -60,7 +60,7 @@ export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
     try {
       const { data } = await signUp({ variables: { input: formValues } });
       console.log(data);
-      sessionStorage.setItem('employee', JSON.stringify(data?.signUp));
+      sessionStorage.setItem('loggedInEmployee', JSON.stringify(data?.signUp));
       dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: data?.signUp });
     } catch (e) {
       console.log(e);
