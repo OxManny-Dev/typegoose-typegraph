@@ -7,6 +7,10 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface CreateCrewInput {
+  crewName?: string | null;
+}
+
 export interface CreateEmployeeInput {
   email?: string | null;
   password?: string | null;
