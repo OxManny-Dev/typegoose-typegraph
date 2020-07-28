@@ -14,6 +14,10 @@ export class Crew {
   @Field({ nullable: true })
   id?: string;
 
+  @Property({ required: true })
+  @Field({ nullable: true })
+  crewName?: string;
+
   @Property({ ref: 'Account', required: true })
   @Field((_return) => Account, { nullable: true })
   account?: Ref<Account>;

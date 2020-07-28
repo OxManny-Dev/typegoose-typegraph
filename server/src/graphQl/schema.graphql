@@ -12,6 +12,10 @@ type Account {
   jobs: [Job!]
 }
 
+input CreateCrewInput {
+  crewName: String
+}
+
 input CreateEmployeeInput {
   email: String
   firstName: String
@@ -28,6 +32,7 @@ input CreateJobInput {
 type Crew {
   account: Account
   crewMembers: [Employee!]
+  crewName: String
   id: String
   jobs: [Job!]
 }
@@ -58,6 +63,7 @@ type Job {
 }
 
 type Mutation {
+  createCrew(createCrewInput: CreateCrewInput!): Crew!
   createEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
   createJob(createJobInput: CreateJobInput!): Job!
   signIn(signInInput: SignInInput): Employee!
@@ -66,6 +72,7 @@ type Mutation {
 }
 
 type Query {
+  fetchCrews: [Crew!]!
   fetchEmployees: [Employee!]!
   fetchJobs: [Job!]!
 }

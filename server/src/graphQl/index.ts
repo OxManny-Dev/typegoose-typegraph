@@ -10,7 +10,7 @@ import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
 import {
   EmployeeModel, AccountModel, JobModel, CrewModel,
 } from './Entities';
-import { EmployeeResolver, JobResolver } from './resolvers';
+import { EmployeeResolver, JobResolver, CrewResolver } from './resolvers';
 // import { buildAuthContext } from './context';
 /*
 * How to pimp out our request object with a ton of middlewares
@@ -23,7 +23,7 @@ import { EmployeeResolver, JobResolver } from './resolvers';
 
 export const createApolloServer = async function () {
   const schema = await buildSchema({
-    resolvers: [EmployeeResolver, JobResolver],
+    resolvers: [CrewResolver, EmployeeResolver, JobResolver],
     // use document converting middleware
     globalMiddlewares: [TypegooseMiddleware],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),

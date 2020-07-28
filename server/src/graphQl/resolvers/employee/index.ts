@@ -1,7 +1,6 @@
 import {
   Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware,
 } from 'type-graphql';
-import { validate, ValidationError } from 'class-validator';
 
 import crypto from 'crypto';
 import faker from 'faker';

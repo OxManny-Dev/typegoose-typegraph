@@ -43,6 +43,19 @@ export class Account {
     }
   }
 
+  public async getCrews(this: DocumentType<Account>) {
+    try {
+      return this.populate({
+        path: 'crews',
+        populate: {
+          path: 'employees',
+        },
+      }).execPopulate();
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
+
   public async getJobs(this: DocumentType<Account>) {
     try {
       return this.populate({
