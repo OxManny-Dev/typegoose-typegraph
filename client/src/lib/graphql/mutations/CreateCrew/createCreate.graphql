@@ -1,0 +1,5 @@
+mutation createCreate($input: CreateCrewInput!) {
+  createCrew(createCrewInput: $input) {
+    crewName
+  }
+}

@@ -28,6 +28,7 @@ export class SignUpInput extends SignInInput implements Partial<GqlEmployee> {
 @InputType()
 export class CreateEmployeeInput extends SignInInput implements Partial<GqlEmployee> {
   @Field({ nullable: true })
+
   @IsString()
   firstName?: string;
 

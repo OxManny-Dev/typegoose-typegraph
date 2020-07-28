@@ -1,0 +1,10 @@
+query fetchCrews {
+  fetchCrews {
+    crewName
+    crewMembers {
+      firstName
+      lastName
+    }
+  }
+}
+

@@ -1,7 +1,7 @@
 import {
   getModelForClass, pre, prop as Property, Ref, ReturnModelType,
 } from '@typegoose/typegoose';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, ID } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcryptjs';
 import {
@@ -12,6 +12,7 @@ import {
 import { EmployeeRoleType } from '../../../lib/types/modelTypes';
 
 @ObjectType({ description: 'A User or Employee of the program' })
+
 @pre<Employee>('save', async function (next) {
   // gets access to the user model that is currently being saved
   const user = this;
@@ -31,10 +32,8 @@ import { EmployeeRoleType } from '../../../lib/types/modelTypes';
 })
 export class Employee {
   // Any field we don't decorate with @Field here is for this class only
-  readonly _id!: ObjectId;
-
-  @Field({ nullable: true })
-  id?: string;
+  @Field(() => ID!, { nullable: true, name: 'id' })
+  _id?: ObjectId;
 
   @Property({
     required: true,
@@ -114,6 +113,7 @@ export class Employee {
   }
 
   // Static class methods
+  // Called on the Model itself.
   // Returns the LoggedIn Users Account
   public static async getAuthEmployeeAccount(this: ReturnModelType<typeof Employee>, id: string) {
     let authenticatedEmployee;
@@ -139,14 +139,15 @@ export class Employee {
     console.log('account', account);
     return account;
   }
-  // Might be useful later account does have this method
-  // async getEmployeeAccount () {
-  //   try {
-  //     return await AccountModel.findById(this.account).populate({ path: 'admin', populate: { path: 'account' } });
-  //   } catch (e) {
-  //     throw new Error(e);
-  //   }
-  // }
+
+  // // Might be useful later account does have this method and much better used there
+  async getEmployeeAccount() {
+    try {
+      return await AccountModel.findById(this.account).populate({ path: 'admin', populate: { path: 'account' } });
+    } catch (e) {
+      throw new Error(e);
+    }
+  }
 }
 
 export const EmployeeModel = getModelForClass(Employee);

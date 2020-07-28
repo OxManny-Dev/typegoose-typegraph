@@ -1,0 +1,6 @@
+mutation signOut {
+  signOut {
+    logOut
+  }
+}
+

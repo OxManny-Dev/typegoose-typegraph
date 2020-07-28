@@ -46,7 +46,7 @@ export const DrawBar: FC<Props> = (props) => {
       </div>
       <Divider/>
       <List>
-        {['SignUp', 'Login', 'User', 'Employees', 'Jobs', 'Ranches', 'Fields'].map((text, index) => (
+        {['SignUp', 'Login', 'User', 'Employees', 'Jobs', 'Ranches', 'Fields', 'Crews'].map((text, index) => (
           <ListItem button key={text} component={Link} to={ index === 0 ? '/' : text.toLowerCase()}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
             <ListItemText primary={text}/>

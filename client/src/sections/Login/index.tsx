@@ -1,16 +1,15 @@
 import React from 'react';
 import { Field, FormSubmitHandler, reduxForm, WrappedFieldProps } from 'redux-form';
 import { Redirect } from 'react-router-dom';
-import { useMutation } from '@apollo/react-hooks';
 import { Button, TextField } from "@material-ui/core";
 import { loginStyle } from "./loginStyle"
-import { SignInInput } from "../../lib/graphql/globalTypes";
-import { signIn as signInData, signInVariables } from "../../lib/graphql/mutations/Login/__generated__/signIn";
+
 import { useSelector } from 'react-redux'
 import SendIcon from '@material-ui/icons/Send';
 
 import { EmployeeActionTypes } from '../../actions/types';
-import { SIGN_IN } from './../../lib/graphql/mutations';
+
+import { useSignInMutation, SignInInput } from '../../generated/graphql-hooks';
 import { IAppState } from '../../reducers';
 import { IEmployeeState } from '../../reducers/employeeReducer';
 
@@ -36,7 +35,7 @@ export const Login = reduxForm<SignInInput>({form: "login"})((props) => {
       loading: signInLoading,
       error: signInError
     }
-  ] = useMutation<signInData, signInVariables>(SIGN_IN);
+  ] = useSignInMutation();
 
 
   const { handleSubmit} = props;

@@ -7,6 +7,7 @@ export const AuthenticateEmployee: MiddlewareFn<Context> = async ({ context: { r
   let employee;
   console.log('cookie', req.signedCookies.loggedInEmployee);
   console.log('token', token);
+
   try {
     employee = await EmployeeModel
       .findOne({ _id: req.signedCookies.loggedInEmployee, token });

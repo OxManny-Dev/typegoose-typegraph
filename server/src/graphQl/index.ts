@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 import path from 'path';
 import { buildSchema } from 'type-graphql';
 import { TypegooseMiddleware } from '../middlewares/typegoose-middleware';
-import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
+// import { ObjectIdScalar } from '../middlewares/ObjectIdScalar';
 
 import {
   EmployeeModel, AccountModel, JobModel, CrewModel,
@@ -25,11 +25,11 @@ export const createApolloServer = async function () {
   const schema = await buildSchema({
     resolvers: [CrewResolver, EmployeeResolver, JobResolver],
     // use document converting middleware
-    globalMiddlewares: [TypegooseMiddleware],
+    // globalMiddlewares: [TypegooseMiddleware],
     emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
     // use ObjectId scalar mapping
-    scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-    validate: false,
+    // scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
+    // validate: false,
   });
   return new ApolloServer({
     schema,

@@ -9,14 +9,6 @@ import { Redirect, useHistory } from 'react-router-dom';
 
 import { IAppState } from '../../reducers';
 import { IEmployeeState } from '../../reducers/employeeReducer';
-// import { ADD_RANCH } from '../../lib/graphql/mutations/AddRanch';
-// import { Ranches } from '../../lib/graphql/queries/Ranch';
-// import { ranches } from '../../lib/graphql/queries/Ranch/__generated__/ranches';
-// import {
-//   AddRanch as AddRanchData,
-//   AddRanchVariables
-// } from '../../lib/graphql/mutations/AddRanch/__generated__/AddRanch';
-// import { AddRanchInput } from '../../lib/graphql/globalTypes';
 
 
 type Props = {

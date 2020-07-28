@@ -1,0 +1,12 @@
+query fetchJobs {
+  fetchJobs {
+    id
+    jobName
+    employees {
+      firstName
+      lastName
+      email
+    }
+  }
+}
+

@@ -1,6 +1,5 @@
 import { MiddlewareFn, NextFn } from 'type-graphql';
 import { AuthenticationError } from 'apollo-server-express';
-import crypto from 'crypto';
 import { Context } from '../../lib/types';
 
 import { cookieOptions } from '../../lib/utils/cookieOptions';
@@ -16,7 +15,7 @@ export const LogInWithCookie: MiddlewareFn<Context> = async ({ context: { req, r
     try {
       employee = await EmployeeModel.findById(req.signedCookies.loggedInEmployee);
     } catch (e) {
-      console.log(e);
+      console.log('error with finding user', e);
       res.clearCookie('employee', cookieOptions);
       throw new Error(e);
     }
@@ -26,7 +25,6 @@ export const LogInWithCookie: MiddlewareFn<Context> = async ({ context: { req, r
     res.clearCookie('loggedInEmployee', cookieOptions);
     throw new AuthenticationError('You are not authenticated please sign in');
   } else {
-    await employee.save();
     return employee;
   }
 };

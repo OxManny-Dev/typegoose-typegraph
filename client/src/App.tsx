@@ -9,13 +9,16 @@ import { SignUp } from './sections/SignUp';
 // import { AddRanch } from './sections/AddRanch';
 // import { RanchesComponent } from './sections/Ranch';
 import { JobsComponent } from './sections/Jobs';
+import { CrewComponent } from './sections/Crew';
 import { EmployeesComponent } from './sections/Employees';
 
 import { AppBarNav } from './components/AppBar';
 import { DrawBar } from './components/DrawBar';
 
-import { signIn as signInData } from './lib/graphql/mutations/Login/__generated__/signIn';
-import { SIGN_IN } from './lib/graphql/mutations/Login';
+
+// Mutations
+import { useSignInMutation } from './generated/graphql-hooks';
+
 import { IAppState } from './reducers';
 import { IEmployeeState } from './reducers/employeeReducer';
 import { EmployeeActionTypes } from './actions/types';
@@ -45,8 +48,7 @@ export const App = () => {
   const history = useHistory();
   const employee = useSelector<IAppState, IEmployeeState>(state => state.employee);
 
-
-  const [signInUser] = useMutation<signInData>(SIGN_IN, {
+  const [signInUser] = useSignInMutation({
     onCompleted: data => {
       if (data && data.signIn.token) {
         sessionStorage.setItem('loggedInEmployee', JSON.stringify(data.signIn));
@@ -97,6 +99,7 @@ export const App = () => {
           <Route exact path='/addjob' component={AddJobComponent}/>
           <Route exact path='/employees' component={EmployeesComponent}/>
           <Route exact path='/login' component={Login}/>
+          <Route exact path='/crews' component={CrewComponent}/>
           {/*<Route exact path='/ranches' component={RanchesComponent}/>*/}
           {/*<Route exact path='/addranch' component={AddRanch}/>*/}
           <Route exact path='/' component={SignUp}/>

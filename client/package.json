@@ -41,6 +41,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "codegen:schema": "npx apollo client:download-schema --endpoint=http://localhost:3001/graphql",
+    "codegen": "graphql-codegen --config ./codegen.yml",
     "codegen:generate": "npx apollo client:codegen --localSchemaFile=schema.json --includes=src/lib/graphql/**/*.ts --excludes=src/assets/**/*.ts --globalTypesFile=./src/lib/graphql/globalTypes.ts --target=typescript"
   },
   "eslintConfig": {
@@ -62,6 +63,10 @@
     "@types/react-redux": "^7.1.9",
     "@types/redux-form": "^8.2.6",
     "@types/tabulator-tables": "^4.7.2",
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.8",
+    "@graphql-codegen/cli": "^1.16.0",
+    "@graphql-codegen/typescript": "^1.16.0",
+    "@graphql-codegen/typescript-operations": "^1.16.0",
+    "@graphql-codegen/typescript-react-apollo": "^1.16.0"
   }
 }

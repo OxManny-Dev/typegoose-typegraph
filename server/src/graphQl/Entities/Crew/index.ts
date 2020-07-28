@@ -2,17 +2,15 @@ import {
   prop as Property, getModelForClass, Ref, ReturnModelType, DocumentType,
 } from '@typegoose/typegoose';
 
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
 import { Account, Employee, Job } from '..';
 
 @ObjectType({ description: 'The different crews of the account' })
 export class Crew {
-  readonly _id!: ObjectId;
-
-  @Field({ nullable: true })
-  id?: string;
+  @Field(() => ID!, { nullable: true, name: 'id' })
+  _id?: ObjectId;
 
   @Property({ required: true })
   @Field({ nullable: true })

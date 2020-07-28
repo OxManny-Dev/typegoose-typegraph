@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
 import { Container } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
-// Query
-import { FETCH_EMPLOYEES } from '../../../lib/graphql/queries/Employees';
-import { fetchEmployees } from '../../../lib/graphql/queries/Employees/__generated__/fetchEmployees';
+
+import { useFetchEmployeesQuery } from '../../../generated/graphql-hooks';
 
 // Redux
 import { IAppState } from '../../../reducers';
@@ -39,7 +37,7 @@ export const EmployeeListComponent = () => {
     data: fetchEmployeesData,
     error: fetchEmployeesError,
     loading: fetchEmployeesLoading,
-  } = useQuery<fetchEmployees>(FETCH_EMPLOYEES, {
+  } = useFetchEmployeesQuery({
     onCompleted: data => {
       console.log('i am data', data);
       dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: data.fetchEmployees });

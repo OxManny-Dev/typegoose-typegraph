@@ -13,13 +13,11 @@ import {
 } from '@material-ui/core';
 
 
-import { useMutation } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
 import SendIcon from '@material-ui/icons/Send';
 
-import { SIGN_UP } from './../../lib/graphql/mutations';
-import { signUp as signUpData, signUpVariables } from '../../lib/graphql/mutations/SignUp/__generated__/signUp';
-import { SignUpInput } from '../../lib/graphql/globalTypes';
+import { useSignUpMutation, SignUpInput } from '../../generated/graphql-hooks';
+
 import { IAppState } from '../../reducers';
 import { Redirect } from 'react-router-dom';
 
@@ -50,7 +48,7 @@ export const SignUp = reduxForm<SignUpInput>({ form: "login" })((props) => {
       loading: signUpLoading,
       error: signUpError
     }
-  ] = useMutation<signUpData, signUpVariables>(SIGN_UP);
+  ] = useSignUpMutation();
   const { handleSubmit} = props;
 
   /*

@@ -1,18 +1,15 @@
 import {
   prop as Property, getModelForClass, Ref, ReturnModelType, DocumentType,
 } from '@typegoose/typegoose';
-import { ObjectType, Field } from 'type-graphql';
+import { ObjectType, Field, ID } from 'type-graphql';
 import { ObjectId } from 'mongodb';
 
 import { Crew, Employee, Job } from '..';
 
 @ObjectType({ description: 'Account of the User' })
 export class Account {
-  // readonly _id!: ObjectId;
-  readonly _id!: ObjectId;
-
-  @Field({ nullable: true })
-  id?: string;
+  @Field(() => ID!, { nullable: true, name: 'id' })
+  _id?: ObjectId;
 
   @Property({ ref: 'Employee', required: true })
   @Field(() => Employee)
@@ -30,6 +27,7 @@ export class Account {
   @Field((_returns) => [Crew], { nullable: true })
   crews?: Ref<Crew>[];
 
+  // Called by an instance Populates whatever data you want. Nested if needed.
   public async getEmployees(this: DocumentType<Account>) {
     try {
       return this.populate({

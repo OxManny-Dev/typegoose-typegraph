@@ -11,16 +11,13 @@ import { ReactTabulator } from 'react-tabulator';
 
 
 // Query
-import { FETCH_JOBS } from '../../lib/graphql/queries/Job';
-import { fetchJobs } from '../../lib/graphql/queries/Job/__generated__/fetchJobs';
-
-// Mutation
-import { CREATE_JOB } from '../../lib/graphql/mutations/CreateJob';
 import {
-  createJob as CreateJobData,
-  createJobVariables as CreateJobVariables
-} from '../../lib/graphql/mutations/CreateJob/__generated__/createJob';
-import { CreateJobInput } from '../../lib/graphql/globalTypes';
+  useFetchJobsQuery,
+  CreateJobInput,
+  useCreateJobMutation,
+} from '../../generated/graphql-hooks';
+
+
 
 // Redux
 import { IAppState } from '../../reducers';
@@ -63,7 +60,7 @@ export const JobsComponent = reduxForm<CreateJobInput>({ form: 'create-job' })(R
     error: fetchJobsError,
     loading: fetchJobsLoading,
     refetch: refetchJobs,
-  } = useQuery<fetchJobs>(FETCH_JOBS, {
+  } = useFetchJobsQuery({
     onCompleted: data => {
       console.log('refetching jobs');
       dispatch({ type: JobsActionTypes.FETCH_JOBS, payload: data.fetchJobs });
@@ -75,7 +72,7 @@ export const JobsComponent = reduxForm<CreateJobInput>({ form: 'create-job' })(R
   const [createJob, {
     loading: createJobLoading,
     error: createJobError,
-  }] = useMutation<CreateJobData, CreateJobVariables>(CREATE_JOB, {
+  }] = useCreateJobMutation({
     onCompleted: async data => {
       await refetchJobs();
     }

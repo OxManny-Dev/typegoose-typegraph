@@ -14,6 +14,7 @@ import { SignUpInput, SignInInput, CreateEmployeeInput } from '../../inputTypes/
 
 import { cookieOptions } from '../../../lib/utils/cookieOptions';
 import { validateInput } from '../../../lib/utils/validateInput';
+
 @Resolver((_of: void) => GqlEmployee)
 export class EmployeeResolver {
   // Queries
@@ -56,7 +57,7 @@ export class EmployeeResolver {
     }
     try {
       const employeeAccount = await EmployeeModel.getAuthEmployeeAccount(req.signedCookies.loggedInEmployee);
-      const newEmployee = await new EmployeeModel({ ...createEmployeeInput, account: employeeAccount.id });
+      const newEmployee = await new EmployeeModel({ ...createEmployeeInput, account: employeeAccount._id });
       // Wants you yo save first then create
       await newEmployee.save();
       employeeAccount.employees.push(newEmployee);
@@ -99,8 +100,8 @@ export class EmployeeResolver {
       const token = crypto.randomBytes(16).toString('hex');
       newEmployee = await new EmployeeModel({ ...signUpInput, token, role: 'Admin' });
       console.log('newEmployee', newEmployee);
-      newAccount = await new AccountModel({ admin: newEmployee.id, name: faker.random.word(), employees: [newEmployee] }).save();
-      newEmployee.account = newAccount.id;
+      newAccount = await new AccountModel({ admin: newEmployee._id, name: faker.random.word(), employees: [newEmployee] }).save();
+      newEmployee.account = newAccount._id;
       await newEmployee.save();
     } catch (e) {
       throw new Error(e);
@@ -181,11 +182,6 @@ export class EmployeeResolver {
   *
   * Field Resolvers
   * */
-
-  @FieldResolver()
-  id(@Root() currentEmployee: GqlEmployee) {
-    return currentEmployee._id.toString();
-  }
 
   @FieldResolver()
   async account(

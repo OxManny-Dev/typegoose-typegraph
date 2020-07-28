@@ -3,19 +3,14 @@ import { Redirect } from 'react-router-dom';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import { reduxForm, FormSubmitHandler, Field, WrappedFieldProps, reset } from 'redux-form';
 import { TextField, Button, MenuItem, Grid, Container } from '@material-ui/core/';
-import { useMutation } from '@apollo/react-hooks';
 
-import { FETCH_EMPLOYEES } from '../../lib/graphql/queries/Employees';
-import { fetchEmployees } from '../../lib/graphql/queries/Employees/__generated__/fetchEmployees';
 
-// Mutations
-import { CREATE_EMPLOYEE } from '../../lib/graphql/mutations/CreateEmployee';
 import {
-  createEmployee as createEmployeeData,
-  createEmployeeVariables,
-} from '../../lib/graphql/mutations/CreateEmployee/__generated__/createEmployee';
-import { CreateEmployeeInput } from '../../lib/graphql/globalTypes';
-
+  FetchEmployeesQuery,
+  useCreateEmployeeMutation,
+  CreateEmployeeInput,
+  FetchEmployeesDocument,
+} from '../../generated/graphql-hooks';
 
 // Redux
 import { IAppState } from '../../reducers';
@@ -40,17 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-
-
-type Props = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  role: string;
-}
-
-
 
 
 const TextFieldInput = ({ input, label, type, placeholder }: WrappedFieldProps & { label: string, type: string, placeholder: string }) => {
@@ -107,7 +91,7 @@ const SelectFieldInput = (
 };
 
 
-export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(React.memo((props) => {
+export const EmployeesComponent = reduxForm<CreateEmployeeInput>({ form: 'create-employee' })(React.memo((props) => {
   const classes = useStyles();
   // Redux
   const dispatch = useDispatch();
@@ -116,21 +100,21 @@ export const EmployeesComponent = reduxForm<Props>({ form: 'create-employee' })(
   const [createEmployee, {
     loading: createEmployeeLoading,
     error: createEmployeeError,
-  }] = useMutation<createEmployeeData, createEmployeeVariables>(CREATE_EMPLOYEE, {
+  }] = useCreateEmployeeMutation({
     update: (cache, { data: CreateEmployee }) => {
-      const { fetchEmployees: employeesData } = cache.readQuery<fetchEmployees>({
-        query: FETCH_EMPLOYEES
+      const { fetchEmployees: employeesData } = cache.readQuery<FetchEmployeesQuery>({
+        query: FetchEmployeesDocument,
       })!;
       if (employeesData) {
         cache.writeQuery({
-          query: FETCH_EMPLOYEES,
+          query: FetchEmployeesDocument,
           data: {
             fetchEmployees: [...employeesData, CreateEmployee?.createEmployee]
           }
         });
       }
-      const { fetchEmployees: newEmployees } = cache.readQuery<fetchEmployees>({
-        query: FETCH_EMPLOYEES
+      const { fetchEmployees: newEmployees } = cache.readQuery<FetchEmployeesQuery>({
+        query: FetchEmployeesDocument,
       })!;
       dispatch({ type: EmployeeActionTypes.FETCH_EMPLOYEES, payload: newEmployees });
     }

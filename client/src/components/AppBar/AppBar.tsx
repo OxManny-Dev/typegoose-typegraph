@@ -12,11 +12,8 @@ import React, { FC } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { appStyles } from './appStyle';
 
-// Mutation for logout
-import { useMutation } from '@apollo/react-hooks';
-import { SIGN_OUT } from '../../lib/graphql/mutations/SignOut';
-import { signOut } from '../../lib/graphql/mutations/SignOut/__generated__/signOut';
 
+import { useSignOutMutation } from '../../generated/graphql-hooks';
 // Redux for logout
 import { useDispatch } from 'react-redux';
 import { EmployeeActionTypes } from '../../actions/types';
@@ -31,9 +28,9 @@ export const AppBarNav: FC<Props> = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [signOutUser] = useMutation<{ SignOut: boolean }, signOut>(SIGN_OUT, {
+  const [signOutUser] = useSignOutMutation({
     onCompleted: data => {
-      console.log(data.SignOut);
+      console.log(data.signOut);
       if (data) {
         sessionStorage.removeItem('loggedInEmployee');
         dispatch({ type: EmployeeActionTypes.LOGIN_EMPLOYEE, payload: '' });
